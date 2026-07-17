@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.600                                                    # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+        <title>encorePOS Dashboard</title>
+        <link rel="stylesheet" href="pickadate/themes/classic.css">
+        <link rel="stylesheet" href="pickadate/themes/classic.date.css">
+        <link rel="stylesheet" href="css/sweetalert.css">
+        <link rel="stylesheet" href="css/rangeslider.css">
+        <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/keyTable.dataTables.min.css"/>
+<!--        <link rel="stylesheet" type="text/css" href="css/editor.dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="css/buttons.dataTables.min.css"/>  -->
+        <link rel="stylesheet" href="css/timedropper.css">
+        <link rel="stylesheet" type="text/css" href="css/remMulti.css">
+
+        <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+        <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+        <link rel="apple-touch-icon" href="image/ios_icon.png">
+        
+        <script src='js/Chart.min.js'></script>
+        <script src='js/canvasloader-min.js'></script>
+        <script src="js/remMulti.js"></script>
+        <script src="js/jquery-1.12.3.min.js"></script> 
+        <script src="js/datatables.min.js"></script>
+        <script src="js/dataTables.keyTable.min.js"></script>
+<!--        <script src="js/dataTables.responsive.min.js"></script>
+        <script src="js/dataTables.editor.min.js"></script>
+        <script src="js/dataTables.colResize.js"></script>
+        <script src="js/dataTables.buttons.min.js"></script>
+        <script src="js/pA.buttons.html5.min.js"></script>
+        <script src="js/buttons.html5.js"></script>
+        <script src="js/buttons.print.min.js"></script>
+        <script src="js/jszip.min.js"></script>
+        <script src="js/pdfmake.min.js"></script> -->
+        <script src="js/vfs_fonts.js"></script>
+        <script src='pickadate/picker.js'></script>
+        <script src='pickadate/picker.date.js'></script>
+        <script src='js/sweetalert.min.js'></script>
+        <script src="js/rangeslider.min.js"></script>
+        <script src="js/timedropper.js"></script>
+        <script src="js/spin.js"></script>
+        <script src="js/version_compare.js"></script>
+        <script>
+            if ( screen.width < 400 ) {
+              var siteWidth = 400;
+              var scale = screen.width /siteWidth
+              document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale='+scale+'');
+            }
+        </script>
+      </head>
+
+    <body onload="multiLoader()">
+      <nav>
+      <ul class="navbar" id="pAnavbar">
+          <li><a class="navLogo" href="http://www.posAdvisors.com"><img src="./images/pA.png" alt="posAdvisors" height="50" width="188"></a></li>
+          <div class="navfiller">&nbsp;</div>
+          <a class="navUser" href="#" onclick="navUserDropdown()">
+              <img class="userImage" id="userImage" src="images/user_24.png" height="24" width="24">
+              <span class="welcome" id="welcome">Welcome</span>
+          </a>
+      </ul>
+      </nav>
+
+      <div id="userDropdown" class="navUserDropdown">
+         <a href="remLogout?">Logout</a>
+      </div>
+ 
+      <div class="spacer">
+          &nbsp;
+      </div>
+
+<div id="tab_dash" class="parent">
+      <div class="storePanel" id="Store_1">
+          <div id="Loader_1" class="wrapper">
+              <canvas class="panelCanvas" width="394" height="262"></canvas>
+          </div>
+          <footer>
+            <span class="dailyLink"><input type="submit" class="linkButton" value="Daily Report" /></span>
+            <span class="more"><input type="submit" class="moreButton" value="Details" /></span>
+          </footer>
+      </div>
+      <div class="storePanel" id="Store_2">
+        <div id="Loader_2" class="wrapper">
+            <canvas class="panelCanvas" width="394" height="262"></canvas>
+        </div>
+        <footer>
+          <span class="dailyLink"><input type="submit" class="linkButton" value="Daily Report" /></span>
+          <span class="more"><input type="submit" class="moreButton" value="Details" /></span>
+      </footer>
+    </div>
+</div>
+
+<div id="tab_store" class="parent">
+  <div class='dashTitleBar'>
+    <span id='dashTitle'>Dashboard for: </span>
+    <span id='dashClose' onclick='closeStoreDashboard()'>&nbsp;X&nbsp;</span>
+  </div>
+
+  <div class="panelDiv" id="TD_Section">
+      <div id="TD-canvasloader-container" class="wrapper">
+          <canvas id="Today" class="panelCanvas" width="394" height="262"></canvas>
+      </div>
+      <footer>
+          <span id="hourlyLink"><input type="submit" class="linkButton" value="Hourly"></span>
+          <span id="More_TD" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+  <div class="panelDiv">
+      <div id="EX-canvasloader-container" class="wrapper">
+          <canvas id="Exceptions" class="panelCanvas" width="394" height="262"></canvas>
+      </div>
+      <footer>
+          <span id="More_Except" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+  <div class="panelDiv">
+      <div class="parent-chart-legend">
+          <div id="js-legend" class="chart-legend"></div>
+      </div>
+      <div class="piediv">
+         <canvas id="Departments" width="319" height="261" class="pieCanvas"></canvas>
+      </div>
+      <footer>
+          <span id="More_Dept" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+  <div class="panelDiv">
+      <canvas id="TopMovers" class="panelCanvas" width="394" height="262"></canvas>
+      <footer>
+          <span id="More_Top" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+  <div class="panelDiv">
+      <div id="y2y-canvasloader-container" class="wrapper">
+         <canvas id="Year2Year" class="panelCanvas" width="394" height="262"></canvas>
+      </div>
+      <footer>
+          <span id="More_Y2Y" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+  <div class="panelDiv">
+      <div id="inv-canvasloader-container" class="wrapper">
+         <canvas id="Inventory" class="panelCanvas" width="394" height="262"></canvas>
+      </div>
+      <footer>
+          <span id="More_Inv" class="more"><input type="submit" class="moreButton" value="More &gt;"></span>
+      </footer>
+  </div>
+
+</div>
+
+      <!-- TD Sales Modal window -->
+      <div id="Modal_TD" class="except-modal">
+
+        <!-- Modal content -->
+        <div id="Modal_TD_Content" class="except-modal-content">
+          <div class="modal-header">
+            <span id="TD_hdr">Today's Sales</span><span id="Modal_TD_close" class="close">x</span>
+          </div>
+          <div id="Modal_TD_Body" class="except-modal-body">
+            <div id="tdsalestablediv" style="background-color: #4586a9;">
+              <table id="sales" class="sales">
+                <tr>
+                  <td class="col_type">Sales</td>
+                  <td id="sales-dols" class="col_dols">1123.00</td>
+                </tr>
+                <tr>
+                  <td class="col_type">Sales Tax</td>
+                  <td id="tax-dols" class="col_dols">67.38</td>
+                </tr>
+                <tr id="TD_deposits">
+                  <td class="col_type">Net Deposits (Deposits - Returns)<span id='depo-retn' style='float: right'></span></td>
+                  <td id="net-depo" class="col_dols">0.00</td>
+                </tr>
+                <tr>
+                  <td class="spacer-left"> </td>
+                  <td class="spacer-right"> </td>
+                </tr>
+                <tr>
+                  <td class="col_type">Cost of Sales</td>
+                  <td id="cost-dols" class="col_dols">0.00</td>
+                </tr>
+                <tr>
+                  <td class="col_type">Gross Profit</td>
+                  <td id="profit-dols" class="col_dols">0.00</td>
+                </tr>
+                <tr>
+                  <td class="spacer-left"> </td>
+                  <td class="spacer-right"> </td>
+                </tr>
+                <tr>
+                  <td class="col_type">Nbr of Sales</td>
+                  <td id="invoice-qty" class="col_dols">43</td>
+                </tr>
+                <tr>
+                  <td id="payment-lbl" class="col_type">Payments on Account</td>
+                  <td id="payment-dols" class="col_dols">2.00</td>
+                </tr>
+                <tr>
+                  <td class="col_type">Discounts</td>
+                  <td id="discount-dols" class="col_dols">2.00</td>
+                </tr>
+                <tr>
+                  <td id="cpn-lbl" class="col_type">Coupons</td>
+                  <td id="cpn-dols" class="col_dols"></td>
+                </tr>
+              </table>
+              <p style="background-color: #4586a9; margin: 0px;">&nbsp;</p>
+              <table id="tenders" class="tenders">
+                <tr>
+                  <th class="col_type">Tender Type</th>
+                  <th class="col_qty">Qty</th>
+                  <th class="col_dols">Dollars</th>
+                </tr>
+                <tr id="tender-1">
+                  <td id="tender-1-lbl" class="col_type"></td>
+                  <td id="tender-1-qty" class="col_qty"></td>
+                  <td id="tender-1-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-2">
+                  <td id="tender-2-lbl" class="col_type"></td>
+                  <td id="tender-2-qty" class="col_qty"></td>
+                  <td id="tender-2-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-3">
+                  <td id="tender-3-lbl" class="col_type"></td>
+                  <td id="tender-3-qty" class="col_qty"></td>
+                  <td id="tender-3-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-4">
+                  <td id="tender-4-lbl" class="col_type"></td>
+                  <td id="tender-4-qty" class="col_qty"></td>
+                  <td id="tender-4-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-5">
+                  <td id="tender-5-lbl" class="col_type"></td>
+                  <td id="tender-5-qty" class="col_qty"></td>
+                  <td id="tender-5-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-6">
+                  <td id="tender-6-lbl" class="col_type"></td>
+                  <td id="tender-6-qty" class="col_qty"></td>
+                  <td id="tender-6-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-7">
+                  <td id="tender-7-lbl" class="col_type"></td>
+                  <td id="tender-7-qty" class="col_qty"></td>
+                  <td id="tender-7-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-8">
+                  <td id="tender-8-lbl" class="col_type"></td>
+                  <td id="tender-8-qty" class="col_qty"></td>
+                  <td id="tender-8-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-9">
+                  <td id="tender-9-lbl" class="col_type"></td>
+                  <td id="tender-9-qty" class="col_qty"></td>
+                  <td id="tender-9-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-10">
+                  <td id="tender-10-lbl" class="col_type"></td>
+                  <td id="tender-10-qty" class="col_qty"></td>
+                  <td id="tender-10-dols" class="col_dols"></td>
+                </tr>
+                <tr id="tender-11">
+                  <td id="tender-11-lbl" class="col_type"></td>
+                  <td id="tender-11-qty" class="col_qty"></td>
+                  <td id="tender-11-dols" class="col_dols"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Y2Y Modal window -->
+      <div id="Modal_Y2Y" class="modal">
+
+        <!-- Modal content -->
+        <div id="Modal_Y2Y_Content" class="modal-chart-content">
+          <div style="height: 30px; width: 98%; text-align: right; position: absolute; top: 0px;">
+            <span id="Modal_Y2Y_close" class="close" style="color: black;">x</span>
+          </div>
+          <div id="Modal_Y2Y_Body" class="modal-chart-body" style="position: absolute; top: 30px; left: 0px;">
+             <canvas id="Modal_Y2Y_Canvas" class="modal-canvas"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+<!-- Hourly Modal window -->
+<div id="Modal_Hourly" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_Hourly_Content" class="except-modal-content">
+      <div id="Modal_Hourly_Body" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="HourlyTableDiv" style="padding: 0px; margin-top: 12px;">
+            <div id="HourlyTitleBar">
+                <div id="HourlyTitle" style="text-align: left; width: 50%; margin-left: 12px;">Today's Hourly Sales</div>
+                <div id="HourlyType" style="text-align: right; position: relative;">
+                  <label for="hourlySelect">Period:&nbsp;</label>
+                  <select id="hourlySelect" onfocus="setInitialHourly(this);" onchange="reloadHourlyTable();">
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="weekago">Week Ago</option>
+                      <option value="thisweek">This Week</option>
+                      <option value="lastweek">Last Week</option>
+                      <option value="thismonth">This Month</option>
+                      <option value="lastmonth">Last Month</option>
+                  </select>
+                  <span id="Modal_Hourly_Close" class="close">X</span>
+                </div>
+            </div>
+            <div id="HourlyTableWrapper" style="padding: 10px;">
+            <table id="HourlyTable" class="display" style="border: 1px solid black; font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+              <thead id="HourlyHdr">
+                <tr>
+                  <th id="Hourly_col1" style="text-align: center;">Time Period</th>
+                  <th id="Hourly_col2" style="text-align: right;">Nbr of Sales</th>
+                  <th id="Hourly_col3" style="text-align: right;">Avg Sale</th>
+                  <th id="Hourly_col4" style="text-align: right;">Total Sales $</th>
+                  <th id="Hourly_col5" style="text-align: right;">% of Sales</th>
+                </tr>
+              </thead>
+              <tbody id="HourlyTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <!-- Exceptions Modal window -->
+      <div id="Modal_Except" class="except-modal">
+        <!-- Modal content -->
+        <div id="Modal_Except_Content" class="except-modal-content">
+          <div class="modal-header" height="10%">
+            <span id="except_hdr">Exception Log</span><span id="Modal_Except_close" class="close">x</span>
+          </div>
+          <div id="Modal_Except_Body" class="except-modal-body">
+            <div id="excepttablediv">
+                 <div id="excepttablewrapper">
+                     <table id="excepttable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+                       <div style="text-align: center;">Today's Exception Items</div>
+                       <thead id="exceptHdr">
+                         <tr>
+                           <th id="except_col1">Type</th>
+                           <th id="except_col2">Clerk</th>
+                           <th id="except_col3">Station</th>
+                           <th id="except_col4">Date</th>
+                           <th id="except_col5">Time</th>
+                           <th id="except_col6">Amount/Old</th>
+                           <th id="except_col7">New Price</th>
+                           <th id="except_col8">Disc %</th>
+                           <th id="except_col9">Qty</th>
+                           <th id="except_col10">Brand</th>
+                           <th id="except_col11">Description</th>
+                         </tr>
+                       </thead>
+                       <tbody id="excepttablebody">
+                       </tbody>
+                     </table>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Types Sold Modal window -->
+      <div id="Modal_Typ" class="except-modal">
+        <!-- Modal content -->
+        <div id="Modal_Typ_Content" class="except-modal-content">
+          <div class="modal-header" height="10%">
+            <span id="typ_hdr">Inventory Value</span><span id="Modal_Typ_close" class="close">x</span>
+          </div>
+          <div id="Modal_Typ_Body" class="except-modal-body">
+            <div id="typtablediv">
+                 <div id="typtablewrapper">
+                     <table id="typtable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+                       <div style="text-align: center;">Product Type Sales Today</div>
+                       <thead id="typHdr">
+                         <tr>
+                           <th id="typ_col1">Dept</th>
+                           <th id="typ_col2">Type Name</th>
+                           <th id="typ_col3">Sales $</th>
+                           <th id="typ_col4">Cost $</th>
+                           <th id="typ_col5">Margin $</th>
+                           <th id="typ_col6">Margin %</th>
+                           <th id="typ_col7">Units Sold</th>
+                           <th id="typ_col8">Avg Sale $</th>
+                         </tr>
+                       </thead>
+                       <tbody id="typtablebody">
+                       </tbody>
+                     </table>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Movers Modal window -->
+      <div id="Modal_Top" class="except-modal">
+        <!-- Modal content -->
+        <div id="Modal_Top_Content" class="except-modal-content">
+          <div class="modal-header" height="10%">
+            <span id="top_hdr">Items Sold Today</span><span id="Modal_Top_close" class="close">x</span>
+          </div>
+          <div id="Modal_Top_Body" class="except-modal-body">
+            <div id="toptablediv">
+                 <div id="toptablewrapper">
+                     <table id="toptable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+                       <div style="text-align: center;">Items Sold Today</div>
+                       <thead id="topHdr">
+                         <tr>
+                           <th id="top_col1">Brand</th>
+                           <th id="top_col2">Description</th>
+                           <th id="top_col3">Size</th>
+                           <th id="top_col4">Type</th>
+                           <th id="top_col5">Qty Sold</th>
+                           <th id="top_col6">$$$ Sold</th>
+                         </tr>
+                       </thead>
+                       <tbody id="toptablebody">
+                       </tbody>
+                     </table>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Value Modal window -->
+      <div id="Modal_Inv" class="except-modal">
+        <!-- Modal content -->
+        <div id="Modal_Inv_Content" class="except-modal-content">
+          <div class="modal-header" height="10%">
+            <span id="inv_hdr">Inventory Value</span><span id="Modal_Inv_close" class="close">x</span>
+          </div>
+          <div id="Modal_Inv_Body" class="except-modal-body">
+            <div id="invtablediv">
+                 <div id="invtablewrapper">
+                     <table id="invtable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+                       <div style="text-align: center;">Inventory Value Today</div>
+                       <thead id="invHdr">
+                         <tr>
+                           <th id="inv_col1">Type Nbr</th>
+                           <th id="inv_col2">Type Name</th>
+                           <th id="inv_col3">Inventory $</th>
+                           <th id="inv_col4">Units on Hand</th>
+                           <th id="inv_col5">Days on Hand</th>
+                           <th id="inv_col6">Avg Cost $</th>
+                         </tr>
+                       </thead>
+                       <tbody id="invtablebody">
+                       </tbody>
+                     </table>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Daily Summary Report Modal window -->
+      <div id="Modal_Daily" class="fqmodal">
+        <!-- Modal content -->
+        <div id="Modal_Daily_Content" class="fqmodal-content">
+          <div class="fqmodal-header">
+            <span id="dailyTitle">Daily Summary Report</span><span id="Modal_Daily_close" class="fqclose" onclick="closeDaily()">X</span>
+          </div>
+          <div id="Modal_Daily_Body" class="fqmodal-body">
+            <div id="daily_select" style="height: auto; margin-bottom: 0px;">
+              <div id="daily_criteria" class="DOH_box1">
+                <fieldset name="dailyFormatSet">
+                <legend>&nbsp;Format&nbsp;</legend>
+                <span class="selectRadios">
+                   <input type="radio" value="1" id="dailyMonth" name="dailyFormat" onchange="getDailyPeriods('MONTH')">
+                   <label for="dailyMonth" style="width: 300px;"><span><span></span></span>Monthly</label>
+                   <br>
+                   <input type="radio" value="2" id="daily12Per" name="dailyFormat" onchange="getDailyPeriods('12')">
+                   <label for="daily12Per" style="width: 300px;"><span><span></span></span>12 Periods: 4/4/5 weeks</label>
+                   <br>
+                   <input type="radio" value="3" id="daily13Per" name="dailyFormat" onchange="getDailyPeriods('13')">
+                   <label for="daily13Per" style="width: 300px;"><span><span></span></span>13 Periods: 4 weeks each</label>
+                </span>
+              </fieldset>
+            </div>
+              <div id="daily_dates" class="DOH_box2">
+                <fieldset name="daily_daterange"><legend>&nbsp;Ad Hoc Report&nbsp;</legend>
+                <span class="selectRadios">
+                   <input type="radio" value="1" id="dailyAdHocCurrent" name="dailyAdHoc" checked="checked" onchange="toggleDailyAdHocSelect()">
+                   <label for="dailyAdHocCurrent" style="width: 300px;"><span><span></span></span>Current Period</label>
+                   <br>
+                   <input type="radio" value="2" id="dailyAdHocSelect" name="dailyAdHoc" onchange="toggleDailyAdHocSelect()">
+                   <label for="dailyAdHocSelect"><span><span></span></span>Selected Period:</label>
+                   <select id="dailyAdHocPeriod" single style="width: 300px; position: relative; left: 10px; font-size: 14px;">
+                   </select>
+                   <br>
+                   <input type="radio" value="3" id="dailyAdHocCustom" name="dailyAdHoc" onchange="toggleDailyAdHocSelect()">
+                   <label for="dailyAdHocCustom" style="width: 300px;"><span><span></span></span>Custom Dates:</label>
+                   <p class="DOH_picker">
+                       <label for="daily_startDate">Start:</label>
+                       <input id="daily_startDate" class="js_datepicker" type="text" name="startDate" onchange="setEndDateVal('daily_startDate','daily_endDate')">
+                       <br>
+                       <label for="daily_endDate">End:</label>
+                       <input id="daily_endDate" class="js_datepicker" type="text" name="endDate" style="margin-top: 10px;">
+                   </p>
+                   <p style="text-align: right;">
+                       <input type="button" id="dailyCloseBtn" class="pAbutton" style="margin-right: 10px;" value="Close" onclick="closeDaily()">
+                       <input type="button" id="daily_submit" class="pAbuttonGrn" style="margin-right: 15px;" value="Run Now" onclick="getDailyReport()">
+                   </p>
+                   </fieldset>
+                </span>
+              </div>
+            </div>
+            <div id="dailyTableDiv" style="margin-top: 1em;">
+                 <p id="dailyDivTitle" class="TableDivTitles">Daily Summary</p>
+                 <p id="daily_waitp" class="waitPara">Data View</p>
+                 <div id="dailytablewrapper">
+                     <table id="dailyTable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+                       <thead id="daily_hdr">
+                         <tr id="dailyHdrRow">
+                          <th id="daily_col0">Notes</th>
+                          <th id="daily_col1">Date</th>
+                          <th id="daily_col1a">Year Ago</th>
+                          <th id="daily_col2">Sales</th>
+                          <th id="daily_col2a">Sales Diff</th>
+                          <th id="daily_col3">Coupon</th>
+                          <th id="daily_col4">Tax</th>
+                          <th id="daily_col5">GiftCert Sold</th>
+                          <th id="daily_col5a">Account Payments</th>
+                          <th id="daily_col6">House Chg</th>
+                          <th id="daily_col7">Cash</th>
+                          <th id="daily_col8">Checks</th>
+                          <th id="daily_col8a">Actual Cash</th>
+                          <th id="daily_col8b">Cash Diff</th>
+                          <th id="daily_col9">MC/Visa</th>
+                          <th id="daily_col10">AmEx</th>
+                          <th id="daily_col11">Disco</th>
+                          <th id="daily_col12">GiftCert Redeem</th>
+                          <th id="daily_col13">#Items</th>
+                          <th id="daily_col14">#Sales</th>
+                          <th id="daily_col14a">#Sales YrAgo</th>
+                          <th id="daily_col14b">#Sales Diff</th>
+                          <th id="daily_col15">Avg Sale</th>
+                          <th id="daily_col16">Avg Item</th>
+                          <th id="daily_col17">Cost</th>
+                          <th id="daily_col18">Gr Profit</th>
+                          <th id="daily_col19">MarkUp</th>
+                          <th id="daily_col20">Margin</th>
+                        </tr>
+                       </thead>
+                       <tbody id="dailytablebody">
+                       </tbody>
+                     </table>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </body>
+</html>

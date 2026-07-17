@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "short_name": "Purchasing",
+  "name": "EncorePOS Purchasing",
+  "version": "1.0.0.0",
+  "start_url": "/purchase.html",
+  "background_color": "#eaf5fb",
+  "theme_color": "#eaf5fb",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "kiosk_enabled" : true,
+  "kiosk_only" : true
+}

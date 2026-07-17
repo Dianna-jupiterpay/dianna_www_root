@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.521                                                    # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.posAdvisors.com | http://www.posAdvisors.com/license.html # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+  <title>encorePOS Dashboard</title>
+  <link rel="stylesheet" href="pickadate/themes/classic.css">
+  <link rel="stylesheet" href="pickadate/themes/classic.date.css">
+  <link rel="stylesheet" href="css/sweetalert.css">
+  <link rel="stylesheet" href="css/rangeslider.css">
+  <link rel="stylesheet" type="text/css" href="css/datatables.min.css" />
+  <link rel="stylesheet" href="css/timedropper.css">
+  <link rel="stylesheet" type="text/css" href="css/dash.css">
+
+  <link rel="icon" href="icon.svg" sizes="any" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48 256x256" type="image/ico">
+
+  <script src='js/Chart.min.js'></script>
+  <script src='js/canvasloader-min.js'></script>
+  <script src="js/dash.js"></script>
+  <script src="js/jquery-1.12.3.min.js"></script>
+  <script src="js/datatables.min.js"></script>
+  <script src="js/vfs_fonts.js"></script>
+  <script src='pickadate/picker.js'></script>
+  <script src='pickadate/picker.date.js'></script>
+  <script src='js/sweetalert.min.js'></script>
+  <script src="js/rangeslider.min.js"></script>
+  <script src="js/timedropper.js"></script>
+  <script src="js/spin.js"></script>
+  <script src="js/version_compare.js"></script>
+</head>
+
+<script>
+var table;
+var editor; // use a global for the submit and return data rendering in the examples
+var obj = {
+  "data": [
+    {
+      "DT_RowId": "row_1",
+      "item": "Send business plan to clients",
+      "done": "1",
+      "priority": "5"
+    },
+    {
+      "DT_RowId": "row_2",
+      "item": "Web-site copy revisions",
+      "done": "0",
+      "priority": "2"
+    },
+    {
+      "DT_RowId": "row_3",
+      "item": "Review client tracking",
+      "done": "0",
+      "priority": "2"
+    },
+    {
+      "DT_RowId": "row_4",
+      "item": "E-mail catchup",
+      "done": "0",
+      "priority": "3"
+    },
+    {
+      "DT_RowId": "row_5",
+      "item": "Complete worksheet",
+      "done": "0",
+      "priority": "1"
+    },
+    {
+      "DT_RowId": "row_6",
+      "item": "Prep sales presentation",
+      "done": "0",
+      "priority": "4"
+    }
+  ],
+  "options": [],
+  "files": []
+}
+
+$(document).ready(function() {
+    var selOptions = ["Highest", "High", "Medium", "Low", "Lowest"];
+
+    editor = new $.fn.dataTable.Editor( {
+        ajax: 'itemEditor?',
+        table: "#example",
+        formOptions: {
+                    inline: {
+                        submit: 'changed'
+                    }
+            },
+        fields: [ {
+                label: "Item:",
+                name:  "item"
+            }, {
+                label: "Status:",
+                name:  "done",
+                type:  "radio",
+                options: [
+                    { label: "To do", value: 0 },
+                    { label: "Done",  value: 1 }
+                ],
+                def: 0
+            }, {
+                label: "Priority:",
+                name:  "priority",
+                type:  "select",
+                options: [
+                    { label: "Highest", value: "1" },
+                    { label: "High",    value: "2" },
+                    { label: "Medium",  value: "3" },
+                    { label: "Low",     value: "4" },
+                    { label: "Lowest",  value: "5" }
+                ]
+            }
+        ]
+    } );
+ 
+    table = $('#example').DataTable( {
+        dom: "Bfrtip",
+        data: obj.data,
+        columns: [
+            { data: "DT_RowId" },
+            { 
+                class: "center",
+                data: "priority",
+                render: function (val, type, row) {
+                    return selOptions[val-1];
+                }
+            },
+            { data: "item" },
+            {
+                "class": "center",
+                "data": "done",
+                "render": function (val, type, row) {
+                    return val == 0 ? "To do" : "Done";
+                }
+            }
+        ],
+        select: true,
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+
+    table.on('click', 'tbody tr td', function (e, dt, type, indexes) {
+        editor.inline(this, { onBlur: 'submit' });
+    });
+/*
+    editor.on('preOpen', function(){ 
+        var openVals = editor.get();
+        console.log( openVals );
+        $('#DTE_Field_priority option:contains('  +  openVals.priority +  ')' )[0].selected = true;
+    })
+*/    
+} );
+</script>
+<body>
+<table id="example" class="display" cellspacing="0" width="80%">
+        <thead>
+            <tr>
+                <th>Row_ID</th>
+                <th>Priority</th>
+                <th>Item</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+</table>
+</body>
+    

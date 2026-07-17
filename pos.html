@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.3.100.105                                                # ||
+|| # pos.html                                                             # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2026 Jupiter Software, LLC  All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+
+  <title>encorePOS Sales Screen</title>
+
+  <link rel="manifest" href="pos.json">
+
+  <!--
+  <link rel="stylesheet" href="pickadate/themes/classic.css">
+  <link rel="stylesheet" href="pickadate/themes/classic.date.css">
+  <link rel="stylesheet" href="css/sweetalert.css">
+  <link rel="stylesheet" href="css/rangeslider.css">
+  <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
+  <link rel="stylesheet" href="css/timedropper.css">
+  -->
+  <link rel="stylesheet" href="css/vex.css" />
+  <link rel="stylesheet" href="css/vex-theme-wireframe.css" />
+  <link type="text/css" rel="stylesheet" href="css/jsgrid.css" />
+  <link type="text/css" rel="stylesheet" href="css/jsgrid-theme.css" />
+<!--  <link rel="stylesheet" type="text/css" href="simple-keyboard/build/css/index.css" /> -->
+  <link rel="stylesheet" href="css/jquery-ui.css"> <!-- "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/pos.css">
+  <link rel="stylesheet" type="text/css" href="css/intlTelInput.min.css">
+
+  <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+  <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+
+  <script src="js/version.js"></script>
+  <script src="js/pos.js"></script>
+  <script src="js/posLib.js"></script>
+  <script src="js/tender.js"></script>
+  <script src="js/jquery-1.12.3.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/jquery.highlight.js"></script>
+  <script src="js/spin.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/shortcut.js"></script> <!-- NOTE: WE USE AN EDITED VERSION -->
+  <script src="js/jquery.mobile-events.min.js"></script>
+  <script src="js/autoNumeric.min.js"></script>
+  <script src="js/vex.combined.min.js"></script>
+  <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+  <script>vex.defaultOptions.overlayClosesOnClick = false</script>
+  <script src="js/jsgrid.min.js"></script>
+  <script src="js/jquery.translate.js"></script>
+  <script src="js/ePosDict.js"></script>
+  <script src="js/ePosSet.js"></script>
+  <script src="js/ePos2DDL.js"></script>
+  <script src="js/message.js"></script>
+<!--  <script src="simple-keyboard/build/index.js"></script> -->
+  <script src="js/intlTelInputWithUtils.min.js"></script>
+  <script src="js/mousetrap.js"></script>
+</head>
+
+<body onload="salesLoader()">
+
+  <div id="pAhdr">
+    <img id="logoImage" src="images/pA_250.png" />
+
+    <!-- Now handled in settings screen
+    <div id="translateBox">
+      <a class="langBtn langBtn-info" onclick="javascript:setLanguage('en');" title="Switch to English" role="button"
+        data-value="en">EN</a>
+      <a class="langBtn langBtn-danger" onclick="javascript:setLanguage('es');" title="En español" role="button"
+        data-value="es">ES</a>
+    </div>
+    -->
+    <div id="dateBox">
+      <input type="text" id="userID" class="posUser">
+      <input type="password" id="login" class="posPswd">
+      <span id="dateDisplay"></span><br>
+      <span id="legalDate"></span>
+    </div>
+  </div>
+
+  <div id="barcBar">
+    <label for="scanText" id="scanTextLabel"><span class="trn">Item Code</span>:&nbsp;</label>
+    <input type="text" id="scanText" autocomplete="off"> <!-- readonly> -->
+    <!--    <input type="button" id="barcGo" class="trn" value="Go" onclick="get_item()"/> -->
+    <button id="barcGo" class="goButton" onclick="get_item()"><span class="trn">Go</span> &raquo;</button>
+    <!--
+    <br>
+    <span id=msgDiv></span>
+    -->
+  </div>
+
+  <div id="versionDiv"></div>
+
+  <div id="customerDiv" style="display: none;">
+    <span id="customerClose" onclick="closeCustomerDiv();" title="Remove customer">&times;</span>
+  </div>
+
+  <div id="cashSale">
+    <span class="trn">Cash Sale</span>
+  </div>
+
+  <div class="gFuncBar">
+    <span class="trashFunc" title="Delete Item(s)"></span>
+    <!--<span class="gFuncSpan searchFunc" id="gFuncSearch" title="Search"><img src="images/search_20.png" alt=""></span>-->
+    <span class="gFuncSpan discFunc" title="Discount Item(s)"><img src="images/percent_20.png" alt=""></span>
+    <span class="gFuncSpan refundFunc" title="Refund Item(s)"><img src="images/refund_20.png" alt=""></span>
+    <span class="gFuncSpan editFunc" title="Edit Item(s)"><img src="images/edit_20.png" alt=""></span>
+    <span class="gFuncSpan infoFunc" title="Item Info"><img src="images/info_20.png" alt=""></span>
+  </div>
+
+  <div id="saleTableDiv">
+    <table id="saleHeaderTable">
+      <thead id="saleTableHdr">
+        <tr id="saleTableHdrRow">
+          <th id="sale_col0">
+            <label class="saleCheckContainer">&nbsp;
+              <input type="checkbox" id="headerCheckmark">
+              <span class="saleCheckmark"></span>
+              <span class="saleDashmark"></span>
+            </label>
+          </th>
+          <th id="sale_col1" class="trn">Line</th>
+          <th id="sale_col2" class="trn">Item</th>
+          <th id="sale_col3" class="trn">Pack</th>
+          <th id="sale_col4" class="trn">Qty</th>
+          <th id="sale_col5" class="trn">Disc%</th>
+          <th id="sale_col6" class="trn">Price</th>
+          <th id="sale_col7" class="trn">Total</th>
+          <th id="sale_col8" class="trn">Tax</th>
+          <th id="sale_col9" class="trn">Dep</th>
+          <th id="sale_col10" class="trn">Sale</th>
+          <!--
+          <th id="sale_col9" class="noSeeCell">Barcode</th>
+          <th id="sale_col10" class="noSeeCell">Codenum</th>
+          <th id="sale_col11" class="noSeeCell">Brand</th>
+          <th id="sale_col12" class="noSeeCell">Descrip</th>
+          <th id="sale_col13" class="noSeeCell">Size</th>
+-->
+        </tr>
+      </thead>
+    </table>
+    <table id="saleTable">
+      <tbody id="saleTableBody">
+      </tbody>
+    </table>
+  </div>
+
+  <div id='menuButton' class="material-icons">
+    more_vert
+    <!--    <span id='menuButtonSpan'>></span>  -->
+  </div>
+
+  <div id="mySidenav" class="sidenav" data-xthreshold="20" viewMe=false>
+    <div id="func1" class="funcDivs">
+      <button class="funcButton" id="helpBtn" onclick="closeNav(); doNothing(this);">
+        <span class="trn funcLeft regular">Help &nbsp; &nbsp;</span>
+        <span class="funcRight regular">F1</span>
+      </button>
+      <button class="funcButton" id="logoutBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Logout</span>
+        <span class="funcRight regular">F2</span>
+      </button>
+      <button class="funcButton" id="itemListBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Items</span>
+        <span class="funcRight regular">F3</span>
+      </button>
+      <button class="funcButton" id="voidBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Void &nbsp; &nbsp;</span>
+        <span class="funcRight regular">F4</span>
+      </button>
+      <button class="funcButton" id="deleteBtn" onclick="closeNav(); console.log('F5 click'); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Delete</span>
+        <span class="funcRight regular">F5</span>
+      </button>
+      <button class="funcButton" id="editBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Edit &nbsp; &nbsp;</span>
+        <span class="funcRight regular">F6</span>
+      </button>
+      <button class="funcButton" id="discBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Discount</span>
+        <span class="funcRight regular">F7</span>
+      </button>
+      <button class="funcButton" id="custListBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Customers</span>
+        <span class="funcRight regular">F8</span>
+      </button>
+      <button class="funcButton" id="tenderBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Tender</span>
+        <span class="funcRight regular">F9</span>
+      </button>
+      <button class="funcButton" id="caseBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Case Sale</span>
+        <span class="funcRight regular">F10</span>
+      </button>
+      <button class="funcButton" id="atCaseBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular" style="float: left;">@Case</span>
+        <span class="funcRight regular">Shft+F10</span>
+      </button>
+      <button class="funcButton" id="refundBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Refund</span>
+        <span class="funcRight regular">RF</span></button>
+      </button>
+      <button class="funcButton" id="qLine1" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">% Off</span>
+        <span class="trn funcLeft regular">LINE</span>
+        <span class="funcRight">Q</span>
+      </button>
+      <button class="funcButton" id="qLine2" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">% Off</span>
+        <span class="trn funcLeft regular">LINE</span>
+        <span class="funcRight">W</span>
+      </button>
+      <button class="funcButton" id="qAll1" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">% Off</span>
+        <span class="trn funcLeft regular">ALL</span>
+        <span class="funcRight">A</span>
+      </button>
+      <button class="funcButton" id="qAll2" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">% Off</span>
+        <span class="trn funcLeft regular">ALL</span>
+        <span class="funcRight">Z</span>
+      </button>
+      <button class="funcButton" id="miscBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Misc Sale</span>
+        <span class="funcRight regular">M</span>
+      </button>
+      <button class="funcButton" id="reprintBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft regular">Reprint</span>
+        <span class="funcRight regular">R</span>
+      </button>
+      <button class="funcButton bigFunc" id="moreBtn" onclick="toggleSideMenu(2);">
+        <span class="trn funcLeft regular">MORE&nbsp;&xdtri;</span>
+        <span class="funcRight">Alt+F10</span>
+      </button>
+    </div>
+    <!-- BEGIN small function buttons -->
+    <div id="func2" class="funcDivs" style="display: none;">
+      <!--
+      <button class="funcButton miniFunc" id="licenseBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">License</span>
+        <span class="funcRight">DL</span>
+      </button>
+      -->
+      <button class="funcButton miniFunc" id="couponBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Coupon &nbsp;</span>
+        <span class="funcRight funcSmall">N / F12</span>
+      </button>
+      <button class="funcButton miniFunc" id="depositBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Deposit</span>
+        <span class="trn funcLeft">Return</span>
+        <span class="funcRight funcSmall">D</span>
+      </button>
+      <button class="funcButton miniFunc" id="lottoBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Lottery&nbsp;&nbsp;&nbsp;</span>
+        <span class="funcRight funcSmall">L</span>
+      </button>
+      <button class="funcButton miniFunc" id="exemptBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Exempt</span>
+        <span class="funcRight funcSmall">TX</span>
+      </button>
+      <button class="funcButton miniFunc" id="cashChkBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Cash</span>
+        <span class="funcRight funcSmall">CC</span>
+        <span class="trn funcLeft">Check</span>
+      </button>
+      <button class="funcButton miniFunc" id="paymentBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Payment</span>
+        <span class="funcRight funcSmall">P</span>
+      </button>
+      <button class="funcButton miniFunc" id="pendingBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Pending</span>
+        <span class="funcRight funcSmall">PT</span>
+      </button>
+      <button class="funcButton miniFunc" id="custHistBttn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Cust Hist</span>
+        <span class="funcRight funcSmall">CHS</span>
+      </button>
+      <button class="funcButton miniFunc" id="deliveryBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Delivery</span>
+        <span class="funcRight funcSmall">Alt+F9</span>
+      </button>
+      <button class="funcButton miniFunc" id="giftCertBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Gift Cert</span>
+        <span class="funcRight funcSmall">GC</span>
+      </button>
+      <button class="funcButton miniFunc" id="saleNoteBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Notes &nbsp; &nbsp;</span>
+        <span class="funcRight funcSmall">SN</span>
+      </button>
+      <button class="funcButton miniFunc" id="freqRebateBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Freq</span>
+        <span class="funcRight funcSmall">FQ</span>
+        <span class="trn funcLeft">Rebate</span>
+      </button>
+      <button class="funcButton miniFunc" id="freqCouponBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Freq</span>
+        <span class="funcRight funcSmall">FC</span>
+        <span class="trn funcLeft">Coupon</span>
+      </button>
+      <button class="funcButton miniFunc" id="barBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Recipes</span>
+        <span class="funcRight funcSmall">BAR</span>
+      </button>
+      <button class="funcButton miniFunc" id="expenseBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Expense</span>
+        <span class="funcRight funcSmall">E</span>
+      </button>
+      <button class="funcButton miniFunc" id="timeClockBtn" onclick="showTimeClock();">
+        <span class="trn funcLeft">Time</span>
+        <span class="funcRight funcSmall">EMP</span>
+        <span class="trn funcLeft">Clock</span>
+      </button>
+      <button class="funcButton miniFunc" id="popBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Pop Item</span>
+        <span class="funcRight funcSmall">Alt+P</span>
+      </button>
+      <button class="funcButton miniFunc" id="closeDrawerBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Close</span>
+        <span class="trn funcLeft">Drawer</span>
+      </button>
+      <button class="funcButton miniFunc" id="twoFerBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">TwoFer</span>
+        <span class="funcRight funcSmall">TX+code</span>
+      </button>
+      <button class="funcButton miniFunc" id="thrFerBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">ThreeFer</span>
+        <span class="funcRight funcSmall">TTX+code</span>
+      </button>
+      <button class="funcButton miniFunc" id="openDrawerBtn" onclick="closeNav(); btnSecureCheck(event, this);">
+        <span class="trn funcLeft">Open</span>
+        <span class="funcRight funcSmall">C</span>
+        <span class="trn funcLeft">Drawer</span>
+      </button>
+      <button class="funcButton bigFunc" id="backBtn" onclick="toggleSideMenu(1);">
+        <span class="trn funcLeft">BACK&nbsp;&xutri;</span>
+        <span class="funcRight">Alt+F10</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="payDiv">
+    <button class="payBtn trn" id="holdButton" onclick="javascript:holdSale();">Hold</button>
+    <button class="payBtn trn" id="payButton"
+      onclick="javascript:console.log('pay pressed'); tenderSale();">PAY</button>
+  </div>
+
+  <div id="totalTableDiv" class="totalTableDiv">
+    <table id="totalTable" class="display totalTable" style="width: 100%;">
+      <tbody id="totalTableBody">
+        <tr class="totalExpander">
+          <td id="totalExpanderObj" class="totalExpanderObj" colspan="2" onclick="totalDivResize()"><img src='/images/up-arrow.png'></td>
+        </tr>
+        <tr class="subTotalRow">
+          <td class="totalLabels" id="subtotalLabel"><span id="totSubLabel">Subtotal</span> :</td>
+          <td id="subTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow">
+          <td class="totalLabels"><span id="totTaxLabel">Taxes</span> :</td>
+          <td id="taxTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow" id="depositRow">
+          <td class="totalLabels"><span id="totDepLabel">Deposit</span> :</td>
+          <td id="totalDepo" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow" id="returnsRow">
+          <td class="totalLabels"><span id="totRetLabel">Returns</span> :</td>
+          <td id="totalRetn" class="totalAmounts">0.00</td>
+        </tr>
+        <tr>
+          <td id="totalBoxTotalLabel" class="totalBoxTotalLabel">Total :</td>
+          <td id="total" class="totalTotals">0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="cashTotalTableDiv" class="totalTableDiv">
+    <table id="cashTotalTable" class="display totalTable" style="width: 100%;">
+      <tbody id="cashTotalTableBody">
+        <tr class="totalExpander">
+          <td class="totalLabels">Cash</td>
+          <td id="cashTotalExpanderObj" class="totalExpanderObj" onclick="totalDivResize()"><img src='/images/up-arrow.png'></td>
+          <td class="totalLabels">Card</td>
+        </tr>
+        <tr class="subTotalRow">
+          <td id="cashSubTotal" class="totalAmounts">0.00</td>
+          <td class="totalLabels" id="subtotalLabel"><span id="totSubLabel">Subtotal</span></td>
+          <td id="subTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow">
+          <td id="cashTaxTotal" class="totalAmounts">0.00</td>
+          <td class="totalLabels"><span id="totTaxLabel">Taxes</span></td>
+          <td id="taxTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow" id="depositRow">
+          <td id="cashDepoTotal" class="totalAmounts">0.00</td>
+          <td class="totalLabels"><span id="totDepLabel">Deposit</span></td>
+          <td id="totalDepo" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow" id="returnsRow">
+          <td id="cashTotalRetn" class="totalAmounts">0.00</td>
+          <td class="totalLabels"><span id="totRetLabel">Returns</span></td>
+          <td id="totalRetn" class="totalAmounts">0.00</td>
+        </tr>
+        <tr>
+          <td id="cashTotal" class="totalTotals">0.00</td>
+          <td id="cashTotalBoxTotalLabel" class="totalBoxTotalLabel">Total</td>
+          <td id="total" class="totalTotals">0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Customer List Modal window -->
+  <div id="Modal_custList" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_custList_Content" class="except-modal-content">
+      <div id="Modal_custList_Body" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="custListTitleBar" class="titleBar_Grn" data-ythreshold="10">
+          <div id="custListTitle" class="titleBarBlockLeft_Grn" style="position: relative; top: -5px;">
+            <span class="trn">Customer List</span>
+          </div>
+          <div id="custListClose" class="titleBarBlockRight_Grn">
+            <span id="Modal_custList_close" class="close" onclick="closeCustList();">&times;</span>
+          </div>
+        </div>
+        <div id="custListPager" class="external-pager"></div>
+        <div id="custListAdd" class="listAdd">
+          <a id="custAdd" class="listAddButton" onclick="javascript:popCust();">+</a>
+        </div>
+        <div id="custListSearch" class="listSearch">
+          <a id="custSearch" class="searchButton" onclick="javascript:searchInputFocus();">(Alt + S)</a>
+          <a id="custClearSearch" class="clearSearch" onclick="javascript:searchInputFocus();" style="display: none;">(Alt
+            + S)</a>
+        </div>
+        <div id="custListTableDiv">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- checksOK List Modal window -->
+  <div id="ModalPendings" class="except-modal">
+    <!-- Modal content -->
+    <div id="ModalPendings_Content" class="except-modal-content">
+      <div id="ModalPendings_Body" class="except-modal-body">
+        <div id="pendingsListTitleBar" class="titleBar_Grn" data-ythreshold="10">
+          <div id="pendingsListTitle" class="titleBarBlockLeft_Grn">
+            <span class="trn">Pending Transactions</span>
+          </div>
+          <div id="pendingsListClose" class="titleBarBlockRight_Grn">
+            <span id="ModalPendings_Close" class="close" onclick="closePendings();">&times;</span>
+          </div>
+        </div>
+        <div id="pendingsHoldOnly"><button id="pendingsHoldButton" class="holdButton">Hold Only</button></div>
+        <div id="pendingsListTableDiv" style="display: block;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product List Modal window -->
+  <div id="Modal_itemList" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_itemList_Content" class="except-modal-content">
+      <div id="Modal_itemList_Body" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="itemListTitleBar" class="titleBar_Grn">
+          <div id="itemListTitle" class="titleBarBlockLeft_Grn" style="position: relative; top: -5px;">
+            <span class="trn">Product List</span>
+          </div>
+          <div id="itemListClose" class="titleBarBlockRight_Grn">
+            <span id="Modal_itemList_close" class="close" onclick="closeItemList();">&times;</span>
+          </div>
+        </div>
+        <div id="itemListPager" class="external-pager"></div>
+        <div id="itemListAdd" class="listAdd">
+          <a id="itemAdd" class="listAddButton" onclick="javascript:itemListAdd();">+</a>
+        </div>
+        <div id="itemListSearch" class="listSearch">
+          <a id="itemSearch" class="searchButton" onclick="javascript:searchInputFocus();">(Alt + S)</a>
+          <a id="itemClearSearch" class="clearSearch" onclick="javascript:searchInputFocus();" style="display: none;">(Alt
+            + S)</a>
+        </div>
+        <div id="itemListTableDiv">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tender Modal window -->
+  <div id="ModalTender" class="modal" data-lFirstEnter=true>
+    <div id="ModalTenderContent" class="modal-chart-content">
+      <div class="tenderContainer">
+        <div id="tenderTypes">
+          <button class="tenderButton trn" id="creditButton" onclick="tenderButtonPress(this);"
+            data-tenderType="3">Card</button>
+          <button class="tenderButton trn" id="cashButton" onclick="tenderButtonPress(this);"
+            data-tenderType="1">Cash</button>
+          <button class="tenderButton trn" id="checkButton" onclick="tenderButtonPress(this);"
+            data-tenderType="2">Check</button>
+          <button class="tenderButton trn" id="houseButton" onclick="tenderButtonPress(this);"
+            data-tenderType="4">Account</button>
+          <button class="tenderButton trn" id="giftButton" onclick="tenderButtonPress(this);"
+            data-tenderType="G">Gift</button>
+          <button class="tenderButton" id="foreignButton" onclick="tenderButtonPress(this);"
+            data-tenderType="F">Foreign</button>
+          <button class="tenderButton" id="type5Button" onclick="tenderButtonPress(this);"
+            data-tenderType="5">Type5</button>
+          <button class="tenderButton" id="type6Button" onclick="tenderButtonPress(this);"
+            data-tenderType="6">Type6</button>
+          <button class="tenderButton" id="type7Button" onclick="tenderButtonPress(this);"
+            data-tenderType="7">Type7</button>
+          <button class="tenderButton" id="type8Button" onclick="tenderButtonPress(this);"
+            data-tenderType="8">Type8</button>
+        
+          <div class="simple-keyboard tenderKeyboard" id="tenderKybd">
+            <div class="hg-row hg-cashSugg">
+              <div class="hg-button hg-standardBtn hg-cashSuggBtn" data-skbtn="X1" onclick="keyPadEntry(this);">
+                <span id="n5Btn"></span>
+              </div>
+              <div class="hg-button hg-standardBtn hg-cashSuggBtn" data-skbtn="X2" onclick="keyPadEntry(this);">
+                <span id="n10Btn"></span>
+              </div>
+              <div class="hg-button hg-standardBtn hg-cashSuggBtn" data-skbtn="X3" onclick="keyPadEntry(this);">
+                <span id="n20Btn"></span>
+              </div>
+            </div>
+            <div class="hg-row">
+              <div class="hg-button hg-standardBtn" data-skbtn="97" onclick="keyPadEntry(this);">
+                <span>1</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="98" onclick="keyPadEntry(this);">
+                <span>2</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="99" onclick="keyPadEntry(this);">
+                <span>3</span>
+              </div>
+            </div>
+            <div class="hg-row">
+              <div class="hg-button hg-standardBtn" data-skbtn="100" onclick="keyPadEntry(this);">
+                <span>4</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="101" onclick="keyPadEntry(this);">
+                <span>5</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="102" onclick="keyPadEntry(this);">
+                <span>6</span>
+              </div>
+            </div>
+            <div class="hg-row">
+              <div class="hg-button hg-standardBtn" data-skbtn="103" onclick="keyPadEntry(this);">
+                <span>7</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="104" onclick="keyPadEntry(this);">
+                <span>8</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="105" onclick="keyPadEntry(this);">
+                <span>9</span>
+              </div>
+            </div>
+            <div class="hg-row">
+              <div class="hg-button hg-standardBtn" data-skbtn="96" onclick="keyPadEntry(this);">
+                <span>0</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="110" onclick="keyPadEntry(this);">
+                <span>.</span>
+              </div>
+              <div class="hg-button hg-standardBtn" data-skbtn="00" onclick="keyPadEntry(this);">
+                <span>00</span>
+              </div>
+            </div>
+            <div class="hg-row">
+              <div class="hg-button hg-functionBtn hg-button-bksp" data-skbtn="8" onclick="keyPadEntry(this);">
+                <span class="trn" data-trn-key="backspace">Backspace</span>
+              </div>
+              <div class="hg-button hg-functionBtn hg-button-enter" data-skbtn="13" onclick="keyPadEntry(this);">
+                <span class="trn" data-trn-key="&amp;lt; enter">↵&nbsp;Enter</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tenderDisplay"></div>
+        <div id="tenderInputDiv" class="two_decimals"></div>
+        <div id="tenderBottom">
+          <span id="cashTotalPrompt">Paying with cash? Cash total is:&nbsp;</span><span id="cashTotalAmount"></span>
+          <span id="tenderCounter"></span>
+          <button id="tenderPrint" class="tenderBtn tenderBtn-secondary trn" onclick="reprintReceipt('last');">PRINT</button>
+          <button id="tenderExit" class="tenderBtn tenderBtn-secondary trn" onclick="closeTender(true);">EXIT</button>
+          <button id="tenderOK" class="tenderBtn tenderBtn-primary trn" onclick="closeTender();">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contextMenu" id="saleContextMenu">
+    <ul class="contextMenu-options">
+      <li id="cmEdit" class="contextMenu-option">Edit Item</li>
+      <li id="cmDisc" class="contextMenu-option trn">Discount Item</li>
+      <li id="cmF10" class="contextMenu-option trn" onclick="secureCheck('', 'F10CaseSale');">Case Qty Sale</li>
+      <li id="cmAtCase" class="contextMenu-option trn" onclick="secureCheck('', 'atCase');">At Case Price</li>
+      <hr style="width: 90%;" />
+      <li id="cmDelete" class="contextMenu-option trn" onclick="secureCheck('ZWSF5', 'F5Delete');">Delete Item</li>
+      <li id="cmRefund" class="contextMenu-option trn" onclick="secureCheck('ZWSRF', 'itemReturn');">Return Item</li>
+      <hr style="width: 90%;" />
+      <li id="cmPop" class="contextMenu-option trn">Pop Item</li>
+      <hr style="width: 90%;" />
+      <li id="cmSKU" class="contextMenu-option"></li>
+    </ul>
+  </div>
+<!--
+  <div class="contextMenu" id="orderContextMenu">
+    <ul class="contextMenu-options">
+      <li id="ordDelete" class="contextMenu-option trn" onclick="ordDelete();">Delete Order</li>
+    </ul>
+  </div>
+-->
+
+  <!-- popCust Modal window -->
+  <div id="modalPopCust" class="except-modal">
+    <!-- Modal content -->
+    <div id="modalPopCustContent" class="except-modal-content">
+      <div id="modalPopCustBody" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="popCustTitleBar" class="titleBar_Grn">
+          <div id="popCustTitle" class="titleBarBlockLeft_Grn">Customer Details</div>
+          <div id="popCustClose" class="titleBarBlockRight_Grn">
+            <span id="Modal_popCust_close" class="close" onclick="closePopCust();">&times;</span>
+          </div>
+        </div>
+        <div id="popCustTabs">
+          <ul>
+            <li><a href="#popCustContainer">Details</a></li>
+            <li><a href="#popCustTaxPricing">Taxes/Pricing</a></li>
+            <li><a href="#popCustShipping">Delivery</a></li>
+            <li><a href="#popCustSalesHistory">Sales History</a></li>
+          </ul>
+          <div id="popCustContainer">
+            <div class="popBox">
+              <div class="popCustLeft">
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Last Name:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustLastName"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">First Name:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustFirstName"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Company:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustCompany"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Address:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustAddr1"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Address2:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustAddr2"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">City:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustCity"></div>
+                  </div>
+                  </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned popTableNarrowCell">State:</div>
+                    <div class="popTableCell popCustDataCell popCustDataSelect" id="popCustState"></div>
+                    <div class="popTableCell popRightAligned">Zip:</div>
+                    <div class="popTableCell popCustDataCell" id="popCustZip"></div>
+                  </div>
+                </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned popBottomCell">Email:</div>
+                    <div class="popTableCell3 popCustDataCell popBottomCell" id="popCustEmail"></div>
+                    <div class="popTableCell popRightAligned popBottomCell"></div>
+                    <div class="popTableCell popRightAligned popBottomCell"></div>
+                  </div>
+                </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Checks OK:</div>
+                    <div class="popTableCell popCustDataCell popCustDataCheck" id="popChecksOK"></div>
+                    <div class="popTableCell popRightAligned">Sale Script:</div>
+                    <div class="popTableCell popCustDataCell popCustDataCheck" id="popCustSaleScript"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Credit Limit:</div>
+                    <div class="popTableCell popCustDataCell popCustDeci2_10" id="popCustCreditLimit"></div>
+                    <div class="popTableCell popRightAligned">Last Payment:</div>
+                    <div class="popTableCell popCustDataCell popNoEdit" id="popCustLastPayment"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned popBottomCell">Inv w/ stmnt:</div>
+                    <div class="popTableCell popCustDataCell popBottomCell popCustDataCheck" id="popCustInvState"></div>
+                    <div class="popTableCell popRightAligned popBottomCell">A/R Group:</div>
+                    <div class="popTableCell popCustDataCell popBottomCell popCustInt1" id="popCustARGroup"></div>
+                  </div>
+                </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Freq Buyer?:</div>
+                    <div class="popTableCell popCustDataCell popCustDataCheck" id="popCustFreqBuyer"></div>
+                    <div class="popTableCell popRightAligned">Points:</div>
+                    <div class="popTableCell popCustDataCell popCustInt10" id="popCustFreqPts"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="popCustRight">
+                <div class="popTable popRightCell">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Phone:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustPhone"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Alt Phone:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustAltPhone"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned popBottomCell">Alt Phone 2:</div>
+                    <div class="popTableCell3 popCustDataCell popBottomCell" id="popCustAltPhone2"></div>
+                  </div>
+                </div>
+                <div class="popTable popRightCell">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Birthday:</div>
+                    <div class="popTableCell popCustDataCell" id="popCustBDay"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Salesperson:</div>
+                    <div class="popTableCell popCustDataCell popDeci2_6" id="popCustSalesman"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Type:</div>
+                    <div class="popTableCell popCustDataCell popCustDataSelect" id="popCustCustType"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Last Order:</div>
+                    <div class="popTableCell popCustDataCell popNoEdit" id="popCustLastOrder"></div>
+                    <div class="popTableCell popRightAligned">Sales:</div>
+                    <div class="popTableCell popCustDataCell popNoEdit" id="popCustSalesTot"></div>
+                  </div>
+                </div>
+                <div class="popTable popRightCell">
+                  <div class="popTableRow">
+                    <div class="popTableCell popTopAligned popTopCell">Notes:</div>
+                  </div>
+                  <div class="popTableRow popRightCell">
+                    <div class="popTableCell3 popTopAligned" style="height: 120px;">
+                      <textarea rows="5" cols="50" id="popCustNotes" readonly></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="popCustTaxPricing">
+            <div class="popBox">
+              <div id="popCustTaxPriceTable">
+                <div class="popTable">
+                  <div class="popTableRow" id="popCustTaxPriceHeader">
+                    <div class="popHeaderCell">Department</div>
+                    <div class="popHeaderCell popCenterAligned" id="custTax1Hdr">Sales Tax</div>
+                    <div class="popHeaderCell popCenterAligned" id="custTax2Hdr">Sales Tax2</div>
+                    <div class="popHeaderCell popCenterAligned" id="custTax3Hdr">Sales Tax3</div>
+                    <div class="popHeaderCell popCenterAligned" id="custTaxFHdr">Flat Tax</div>
+                    <div class="popHeaderCell popCenterAligned">Discount %</div>
+                    <div class="popHeaderCell popCenterAligned">Price Level</div>
+                  </div>
+                </div>
+                <!-- Rows added dynamically --> 
+              </div>
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell1 popRightAligned">Tax ID :</div>
+                  <div class="popTableCell2 popCustDataCell" id="popCustTaxID"></div>
+                  <div class="popTableCell popRightAligned">Volume Tax:</div>
+                  <div class="popTableCell popCustDataCell popCustDataCheck" id="popCustVolumeTax"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell1 popRightAligned">Expires:</div>
+                  <div class="popTableCell2 popCustDataCell popCustDatePick" id="popCustTaxIDExp"></div>
+                  <div class="popTableCell popRightAligned">&nbsp;</div>
+                  <div class="popTableCell"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="popCustShipping">
+            <div class="popBox">
+              <div class="popCustLeft">
+                <div class="popTable">
+                  <h1 class="popSubTitle">Delivery Info:</h1>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Same as Billing:</div>
+                    <div class="popTableCell popCustDataCell popCustDataCheck" id="popCustDeliveryCheck"></div>
+                    <div class="popTableCell popRightAligned"></div>
+                  </div>
+                </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Contact:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivContact"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Company:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivCompany"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Address:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivAddr1"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Address2:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivAddr2"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">City:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivCity"></div>
+                  </div>
+                </div>
+                  <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned popTableNarrowCell">State:</div>
+                    <div class="popTableCell popCustDataCell popCustDataSelect" id="popCustDelivState"></div>
+                    <div class="popTableCell popRightAligned">Zip:</div>
+                    <div class="popTableCell popCustDataCell" id="popCustDelivZip"></div>
+                  </div>
+                </div>
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Phone:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivPhone"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Alt Phone:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivAltPhone"></div>
+                  </div>
+                  <div class="popTableRow">
+                    <div class="popTableCell popRightAligned">Email:</div>
+                    <div class="popTableCell3 popCustDataCell" id="popCustDelivEmail"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="popCustRight">
+                <div class="popTable">
+                  <div class="popTableRow">
+                    <div class="popTableCell popTopAligned"><b>Delivery Notes:</b></div>
+                  </div>
+                  <div class="popTableRow" style="height: 315px;">
+                    <div class="popTableCell3 popTopAligned">
+                      <textarea rows="16" cols="50" id="popCustDelivNotes" readonly></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="popCustSalesHistory">
+            Not Implemented
+          </div>
+        </div>
+        <div class="popButtonDiv">
+          <button class="popCancelBtn" onclick="closePopCust();">Cancel</button>
+          <button class="popSaveBtn goButton">Save</button>
+        </div>
+        <div class="popEditButtonDiv">
+          <button class="popCancelBtn popDeleteBtn" onclick="popDeleteCust();">Delete</button>
+          <button class="popCancelBtn" onclick="closePopCust();">Cancel</button>
+          <button class="goButton popEditBtn" onclick="addEditPopCust('edit');">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of popCust Modal window -->
+
+<!-- popItem Modal window -->
+  <div id="modalPopItem" class="except-modal">
+    <!-- Modal content -->
+    <div id="modalPopItemContent" class="except-modal-content">
+      <div id="modalPopItemBody" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="popItemTitleBar" class="titleBar_Grn">
+          <div id="popItemTitle" class="titleBarBlockLeft_Grn">Item Details</div>
+          <div id="popItemClose" class="titleBarBlockRight_Grn">
+            <span id="Modal_popItem_close" class="close" onclick="closePopItem();">&times;</span>
+          </div>
+        </div>
+        <div id="popContainer">
+          <div class="popDivider">
+            <div id="popDividerLeft">
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBarcLabel">Barcode:</div>
+                  <div class="popTableCell popDataCell" id="popBarcode"></div>
+                  <div class="popTableCell"></div>
+                  <div class="popTableCell"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="popBox">
+            <div id="popLeft">
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Brand:</div>
+                  <div class="popTableCell3 popDataCell" id="popBrand"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Description:</div>
+                  <div class="popTableCell3 popDataCell" id="popDescrip"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Type:</div>
+                  <div class="popTableCell3 popDataCell popDataSelect" id="popType"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned" id="popUser1Label">User 1:</div>
+                  <div class="popTableCell3 popDataCell popDataSelect" id="popUser1"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned" id="popUser2Label">User 2:</div>
+                  <div class="popTableCell3 popDataCell popDataSelect" id="popUser2"></div>
+                </div>
+              </div>
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Size:</div>
+                  <div class="popTableCell popDataCell popDataSelect" id="popSize"></div>
+                  <div class="popTableCell popRightAligned">Class:</div>
+                  <div class="popTableCell popDataCell popDataSelect" id="popClass"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Case Qty:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt6" id="popCaseQ"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Bin Nbr:</div>
+                  <div class="popTableCell popBottomCell popDataCell" id="popBinNbr"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">On Hand:</div>
+                  <div class="popTableCell popDataCell popInt6" id="popQOH"></div>
+                  <div class="popTableCell popRightAligned">Par Level:</div>
+                  <div class="popTableCell popDataCell popInt6" id="popParQ"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">On Order:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt6" id="popQOO"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Reorder Pt:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt6" id="popReoPt"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Shelf Space:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt4" id="popShSpace"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Qty on Shelf:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt4" id="popShQ"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell popDateLabel">Last Edit:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataDate" id="popLastEdit"></div>
+                  <div class="popTableCell popRightAligned popBottomCell popDateLabel">Last Sale:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataDate" id="popLastSale"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">MTD Sales:</div>
+                  <div class="popTableCell popDataCell popInt6" id="popMTD"></div>
+                  <div class="popTableCell popRightAligned">YTD Sales:</div>
+                  <div class="popTableCell popDataCell popInt8" id="popYTD"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Last Month:</div>
+                  <div class="popTableCell popDataCell popInt6" id="popLastMonth"></div>
+                  <div class="popTableCell"></div>
+                  <div class="popTableCell"></div>
+                </div>
+              </div>
+            </div>
+            <!-- LEFT/RIGHT BORDER -->
+            <div id="popRight">
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Vendor:</div>
+                  <div class="popTableCell3 popDataCell popDataSelect" id="popVendor"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Vendor Nbr:</div>
+                  <div class="popTableCell3 popDataCell" id="popVendNbr"></div>
+                </div>
+              </div>
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell popDateLabel">Last Order:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataDate" id="popLastOrd"></div>
+                  <div class="popTableCell popRightAligned popBottomCell popDateLabel">Last Receive:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataDate" id="popLastRecv"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Deposit:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataCheck" id="popDepYN"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Deposit Amt:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDeci3_7" id="popDepAmt"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Sales Tax:</div>
+                  <div class="popTableCell popDataCell popData3State" id="popTax1"></div>
+                  <div class="popTableCell popRightAligned">Tax 3:</div>
+                  <div class="popTableCell popDataCell popData3State" id="popTax3"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Tax 2:</div>
+                  <div class="popTableCell popBottomCell popDataCell popData3State" id="popTax2"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Flat Tax:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDeci4_8" id="popFlatTax"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Discount OK:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataCheck" id="popDiscYN"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Point Factor:</div>
+                  <div class="popTableCell popBottomCell popDataCell popInt2" id="popFreqX"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned ">Dep on Rcv:</div>
+                  <div class="popTableCell popDataCell popDataCheck" id="popDepRcvYN"></div>
+                  <div class="popTableCell popRightAligned ">Deposit Amt:</div>
+                  <div class="popTableCell popDataCell popDeci3_7" id="popDepRcvAmt"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popBottomCell">Order Lot:</div>
+                  <div class="popTableCell popBottomCell popDataCell" id="popOrderLot"></div>
+                  <div class="popTableCell popRightAligned popBottomCell">Print Labels:</div>
+                  <div class="popTableCell popBottomCell popDataCell popDataCheck" id="popPrintLabels"></div>
+                </div>
+              </div>
+              <div class="popTable">
+                <div class="popTableRow" style="height: 119px;">
+                  <div class="popTableCell popRightAligned popTopAligned">Notes:</div>
+                  <div class="popTableCell3 popTopAligned">
+                    <textarea rows="6" cols="50" id="popNotes" readonly></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="popDivider2"></div>
+          <!--  Price/Cost Table -->
+          <div class="popBox">
+            <div id="popLeft2">
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">&nbsp;</div>
+                  <div class="popTableCell popRightAligned">&nbsp;</div>
+                  <div class="popTableCell popPopHide">MkUp%</div>
+                  <div class="popTableCell popPopHide">Marg%</div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned" id="popAvgCostLabel">Avg Cost:</div>
+                  <div class="popTableCell popDataCell popDeci4_12" id="popAvgCost"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMarkUp" id="popUnitMkUp"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMargin" id="popUnitMarg"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Last Cost:</div>
+                  <div class="popTableCell popDataCell popDeci4_12" id="popLastCost"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMarkUp" id="popLastMkUp"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMargin" id="popLastMarg"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popPopHide">Case Cost:</div>
+                  <div class="popTableCell popDataCell popDeci4_12 popPopHide" id="popCaseCost"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMarkUp" id="popCaseMkUp"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMargin" id="popCaseMarg"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popPopHide">Last Case:</div>
+                  <div class="popTableCell popDataCell popDeci4_12 popPopHide" id="popLastCase"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMarkUp" id="popLastCaseMkUp"></div>
+                  <div class="popTableCell popDataCell popDeci2_6 popPopHide popMargin" id="popLastCaseMarg"></div>
+                </div>
+              </div>
+            </div>
+            <!--</div>-->
+            <div id="popRight2">
+              <div class="popTable">
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Std Price:</div>
+                  <div class="popTableCell popDataCell popQtyPrice" id="popPrice"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Case Price:</div>
+                  <div class="popTableCell popDataCell popQtyPrice" id="popCasePr"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Two Fer:</div>
+                  <div class="popTableCell popDataCell popQtyPrice" id="pop2Fer"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned">Three Fer:</div>
+                  <div class="popTableCell popDataCell popQtyPrice" id="pop3Fer"></div>
+                </div>
+                <div class="popTableRow">
+                  <div class="popTableCell popRightAligned popPopHide">Discount Pool:</div>
+                  <div class="popTableCell popDataCell popPopHide" id="popPool"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="popButtonDiv">
+          <button class="popCancelBtn" onclick="closePopItem();">Cancel</button>
+          <button class="popSaveBtn goButton" onclick="popSaveItem();">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="custSeek">
+    <div id="custSeekHdr">
+      &nbsp;Customer Lookup
+      <span id="custSeekClose" onclick="closeCustSeek();" title="Close Lookup">×</span>
+    </div>
+    <div id="custSeekInput">
+      <label for="custSeekStr">Find:&nbsp;</label><input id="custSeekStr"/>
+    </div>
+    <div id="custSeekHint">(Last name or phone)</div>
+    <div id="custSeekFormat">
+      <input type="radio" id="custSeekBegin" class="setSubRadio" name="custSeekForm" value="B" checked>
+      <label for="custSeekBegin" class="setSubLabel">Begins with...</label>
+      <br>
+      <input type="radio" id="custSeekContains" class="setSubRadio" name="custSeekForm" value="C">
+      <label for="custSeekContains" class="setSubLabel">Contains...</label>
+      <br>
+      <input type="radio" id="custSeekEnds" class="setSubRadio" name="custSeekForm" value="E">
+      <label for="custSeekEnds" class="setSubLabel">Ends with...</label>
+    </div>
+    <div id="custSeekMsg"></div>
+    <div id="custSeekGoDiv">
+      <button id="custSeekGo" class="goButton" onclick="var e = $.Event( 'keydown', { which: 13, key: 13 } ); $('body').trigger(e);">
+        <span class="trn">Go</span> &raquo;
+      </button>
+    </div>
+  </div>
+
+  <div id="ModalID" class="modal">
+    <div id="ModalIDContent" class="modal-chart-content">
+      <div id="IDContainer">
+        <h3 id="idHead">Identification Scan</h3>
+        <div id="IDInfo">
+          <p id="idProcess">Processing...</p>
+
+          <p id="idNoDoB" style="display: none;">Warning! Birth date not decoded.</p>
+          <p id="idExpired" style="display: none;">Warning! License expired.</p>
+
+          <p id="tobacco" class="legalPara"><span id="tobaccoLight" class="legalLight"></span>
+            <span id="legalLabel1" class="legalLabel trn">Tobacco:</span><span id="tobaccoText" class="legalText"></span></p>
+          <p id="alcohol" class="legalPara"><span id="alcoholLight" class="legalLight"></span>
+            <span id="legalLabel2" class="legalLabel trn">Alcohol:</span><span id="alcoholText" class="legalText"></span></p>
+          <br>
+
+          <p id="idDOB" class="idData"></p>
+          <br>
+          <p id="idVet" class="idData"></p>
+          <br id="idVet" style="display: none;" class="idData">
+          <p id="idLast" class="idData"></p>
+          <p id="idFirst" class="idData"></p>
+          <p id="idMiddle" class="idData"></p>
+          <p id="idSuffix" class="idData"></p>
+          <br>
+          <p id="idStreet" class="idData"></p>
+          <p id="idStreet2" class="idData"></p>
+          <p id="idCity" class="idData"></p>
+          <p id="idState" class="idData"></p>
+          <p id="idZip" class="idData"></p>
+          <br>
+          <p id="idNbr" class="idData"></p>
+          <p id="idSex" class="idData"></p>
+
+        </div>
+      </div>
+      <div id="IDBottom">
+        <button id="IDNewCust" class="tenderBtn tenderBtn-primary trn" title="Create a new customer" onclick="custCreateDL();">Create</button>
+        <button id="IDAddTo" class="tenderBtn tenderBtn-primary trn" title="Add to an existing customer" onclick="custAddDL();">Add To</button>
+        <button id="IDOK" class="tenderBtn tenderBtn-secondary trn" onclick="closeID();">EXIT</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="securityFail" class="modal">
+    <div id="securityFailContent" class="modal-chart-content">
+      <p id="securityFailMsg"><img src="\images\securityFail.png" width="40" height="40">
+        <br>
+        <br>
+        You are not authorized to
+        <br>
+        access this feature.</p>
+      <br>
+      <button id="securityFailOK" onclick="$('#securityFail').hide(); focusBarc();">Cancel</button>
+      <button id="securityFailOverride" onclick="securityOverrideShow();">Override</button>
+    </div>
+  </div>
+
+  <div id="securityOverride" class="modal">
+    <div id="securityOverrideContent" class="modal-chart-content">
+      <p id="securityOverrideMsg"><img src="\images\securityOverride.png" width="40" height="40">
+        OVERRIDE
+      </p>
+      <label for="overrideUser">User:</label>
+      <input id="overrideUser" type="text" autocomplete="off">
+      <label for="overridePswd">Password:</label>
+      <input id="overridePswd" type="password"autocomplete="off">
+      <div id="overrideMsg">&nbsp;</div>
+      <button id="securityOverrideCancel" onclick="securityOverrideCancel();">Cancel</button>
+      <button id="securityOverrideOK" data-func="" data-call="" data-param="" data-overUID=""
+              onclick="securityOverride();">SUBMIT</button>
+    </div>
+  </div>
+
+  <div id="reprintReceipt" class="modal">
+    <div id="reprintReceiptContent" class="modal-chart-content">
+      <p id="reprintReceiptMsg"><img src="\images\receiptPrinter.png" width="40" height="40">
+        <span id="reprintReceiptMsgText">Reprint Receipt</span>
+      </p>
+      <div id="reprintReceiptSelections">
+        <button id="reprintLast" onclick="reprintReceipt('last')">Last</button>
+        <label for="reprintLast">Reprint last receipt</label><br>
+        <button id="reprintNbr" onclick="reprintReceipt('nbr')"><u>N</u>umber</button>
+        <label for="reprintNbr">Receipt nbr:</label>
+        <input id="reprintNbrInput" type="text" autocomplete="off"><br>
+        <button id="reprintList" onclick="reprintReceipt('list')">Lis<u>t</u></button>
+        <label for="reprintList">Older receipt from list</label><br>
+        <button id="reprintGift" onclick="reprintReceipt('gift')"><u>G</u>ift</button>
+        <label for="reprintGift">Last sale gift slip</label><br>
+      </div>
+      <button id="reprintReceiptCancel" onclick="reprintReceiptCancel();">Cancel</button>
+    </div>
+  </div>
+
+  <div id="cashDrop" class="modal">
+    <div id="cashDropContent" class="modal-chart-content">
+      <p id="cashDropMsg"><img src="\images\cashDrop.png" width="40" height="40">
+        CASH DROP
+      </p>
+      <div id="cashDropInput">
+      <label for="cashDropAmount">Amount:</label>
+      <input id="cashDropAmount" type="text" autocomplete="off">
+      <br>
+      <span id="cashDropError">&nbsp;</span>
+      </div>
+      <button id="cashDropCancel" onclick="cashDropCancel();">Cancel</button>
+      <button id="cashDropOK" onclick="cashDrop();">SUBMIT</button>
+    </div>
+  </div>
+
+  <dialog id="timeClockDialog">
+    <div id="timeClockContent">
+      <div id="timeClockBody">
+        <div class="timeClockCredentials">
+          <div id="timeClockIcon">
+            <svg id="timeClockIconSvg" width="50px" height="50px" version="1.1" viewBox="0 0 100 100"></svg>
+          </div>
+          <div id="timeClockUserDiv">
+            <label for="timeClockUser" class="timeClockLabel">User ID:</label>
+            <input id="timeClockUser" type="text" class="timeClockInput" autocomplete="off" maxlength="6">
+          </div>
+          <div>&nbsp;</div>
+          <div id="timeClockPasswordDiv">
+            <label for="timeClockPassword" class="timeClockLabel">Password:</label>
+            <input id="timeClockPassword" type="password" class="timeClockInput" autocomplete="off">
+          </div>
+        </div>
+        <fieldset id="timeClockInOutFieldset">
+          <!--
+            <input type="radio" class="timeClockRadio" id="timeClockIn" name="timeClockInOut" value="in">
+            <label for="timeClockIn">Check In</label>
+            <br>
+            <input type="radio" class="timeClockRadio" id="timeClockOut" name="timeClockInOut" value="out">
+            <label for="timeClockOut">Check Out</label>
+            -->
+          <label class="radioButton radioButtonDisabled">
+            <input type="radio" name="timeClockInOut" value="I">
+            <span>Clock IN</span>
+          </label>
+          <label class="radioButton radioButtonDisabled">
+            <input type="radio" name="timeClockInOut" value="O" checked>
+            <span>Clock OUT</span>
+          </label>
+        </fieldset>
+      </div>
+      <div id="timeClockBtnDiv">
+        <button id="timeClockCancelBtn" class="popCancelBtn timeClockCancelBtn"
+          onclick="closeTimeClock();">Cancel</button>
+        <button id="timeClockOkBtn" class="goButton timeClockOkBtn" onclick="submitTimeClock();" disabled>OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="giftCardDialog">
+    <div id="giftCardContent">
+      <div id="giftCardBody">
+        <div id="giftCardHdr">
+          <h2><svg id="giftCardIconSvg" width="50px" height="50px" version="1.1" viewBox="0 0 100 100"></svg>&nbsp;&nbsp;Gift Card Entry</h2>
+        </div>
+        <div id="giftCardInfoDiv">
+          <label for="giftCardNbr" class="giftCardLabel giftCardInHouseOnly">Card Nbr:</label>
+          <input id="giftCardNbr" type="text" class="giftCardInput giftCardInHouseOnly" autocomplete="off">
+          <br>
+          <label for="giftCardAmount" class="giftCardLabel">Amount:</label>
+          <input id="giftCardAmount" type="text" class="giftCardInput ANDeci9_2" autocomplete="off">
+          <button id="giftCardAdd" class="giftCardAddBtn" onclick="doGiftCardAdd();">Add&nbsp;$ <!--<span id="giftCardAddIcon" class="material-icons">attach_money</span>--></button>
+          <br>
+          <label for="giftCardPurchases" class="giftCardLabel giftCardInHouseOnly">Purchases:</label>
+          <input id="giftCardPurchases" type="text" class="giftCardInput giftCardInHouseOnly ANDeci9_2" autocomplete="off" disabled>
+          <br>
+          <label for="giftCardBalance" class="giftCardLabel giftCardInHouseOnly">Balance:</label>
+          <input id="giftCardBalance" type="text" class="giftCardInput giftCardInHouseOnly ANDeci9_2" autocomplete="off" disabled>
+        </div>
+      </div>
+      <div id="giftCardNewOrAddDiv">
+        <div class="circle-btn-div"><button id="giftCardNewBtn" class="circle-btn circle-btn-pressed">NEW</button></div>
+        <div class="circle-btn-div"><button id="giftCardAddBtn" class="circle-btn">ADD</button></div>
+        <div class="circle-btn-div"><button id="giftCardBalBtn" class="circle-btn">BAL</button></div>
+      </div>
+      <div id="giftCardBtnDiv">
+        <button id="giftCardCancelBtn" class="popCancelBtn giftCardCancelBtn" onclick="closeGiftCard();">Cancel</button>
+        <button id="giftCardOkBtn" class="goButton giftCardOkBtn" onclick="saveGiftCard();" disabled>OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="giftCardAddAmountDialog">
+    <div id="giftCardAddAmountContent">
+      <div id="giftCardAddAmountBody">
+        <div id="giftCardAddAmountHdr">
+          Add to Gift Card
+        </div>
+        <div id="giftCardAddAmountInfoDiv">
+          <label for="giftCardAddAmount" class="giftCardLabel">Amount:</label>
+          <input id="giftCardAddAmount" type="text" class="giftCardInput ANDeci9_2" autocomplete="off">
+        </div>
+      </div>
+      <div id="giftCardAddAmountBtnDiv">
+        <button id="giftCardAddAmountCancelBtn" class="popCancelBtn giftCardAddAmountCancelBtn" onclick="closeGiftCardAddAmount();">Cancel</button>
+        <button id="giftCardAddAmountOkBtn" class="goButton giftCardAddAmountOkBtn" onclick="submitGiftCardAddAmount();">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="drawerNbrGet">
+    <div id="drawerNbrGetContent" class="modal-chart-content">
+      <p id="drawerNbrGetMsg"><img src="\images\cashRegister.png" width="40" height="40">
+        Drawer Number
+      </p>
+      <div id="drawerNbrGetInputDiv">
+      <input id="drawerNbrGetInput" type="text" autocomplete="off">
+      </div>
+      <button id="drawerNbrGetOK" onclick="drawerNbrSubmit();">SUBMIT</button>
+    </div>
+  </dialog>
+
+  <div id="drawerInit" class="modal">
+    <div id="drawerInitContent" class="modal-chart-content">
+      <p id="drawerInitMsg"><img src="\images\cashRegister.png" width="40" height="40">
+        Drawer Opening Balance
+      </p>
+      <div id="drawerInitInput">
+      <label for="drawerInitAmount">Amount:</label>
+      <input id="drawerInitAmount" type="text" autocomplete="off">
+      </div>
+      <button id="drawerInitCancel" onclick="drawerInitCancel();">Cancel</button>
+      <button id="drawerInitOK" onclick="drawerInit();">SUBMIT</button>
+    </div>
+  </div>
+
+  <div id="drawerClose" class="modal">
+    <div id="drawerCloseContent" class="modal-chart-content">
+      <div id="drawerCloseContainer">
+        <h1>Drawer Close Nbr: <span id="drawerCloseNbr"></span></h1>
+          <div id="drawerCloseNameDate">
+            <label>Clerk name: <input type="text" id="clerk_name" name="clerk_name"></label>
+            <label style="margin-left:18px">Date/time: <input type="datetime-local" id="close_time"
+                name="close_time" disabled></label>
+          </div>
+        <p class="muted no-print">Enter the counted amounts for each tender type. Totals and variance are calculated automatically.
+          Print or save the summary for manager sign-off.</p>
+  
+        <form id="drawerCloseForm" novalidate>
+          <table>
+            <thead>
+              <tr>
+                <th>Tender Type</th>
+                <th class="right">Counted</th>
+                <th class="right">Expected</th>
+                <th class="right">Variance</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cash</td>
+                <td class="right"><input type="text" name="counted_cash" id="counted_cash"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_cash"
+                    id="expected_cash" disabled value="0.00"></td>
+                <td class="right variance" id="variance_cash">0.00</td>
+                <td><input type="text" class="note" name="note_cash" id="note_cash" placeholder="e.g. denominations"></td>
+              </tr>
+  
+              <tr id="foreignRow">
+                <td>Foreign</td>
+                <td class="right"><input type="text" name="counted_foreign" id="counted_foreign"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_foreign"
+                    id="expected_foreign" disabled value="0.00"></td>
+                <td class="right variance" id="variance_foreign">0.00</td>
+                <td><input type="text" class="note" name="note_foreign" id="note_foreign" placeholder="e.g. coin rolls"></td>
+              </tr>
+  
+              <tr>
+                <td>Credit / Debit</td>
+                <td class="right"><input type="text" name="counted_card" id="counted_card"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_card"
+                    id="expected_card" disabled value="0.00"></td>
+                <td class="right variance" id="variance_card">0.00</td>
+                <td><input type="text" class="note" name="note_card" id="note_card" placeholder="batch/settlement ref"></td>
+              </tr>
+  
+              <tr>
+                <td>Gift Cards</td>
+                <td class="right"><input type="text" name="counted_gift" id="counted_gift"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_gift"
+                    id="expected_gift" disabled value="0.00"></td>
+                <td class="right variance" id="variance_gift">0.00</td>
+                <td><input type="text" class="note" name="note_gift" id="note_gift" placeholder="codes or serials"></td>
+              </tr>
+  
+              <tr id="tender5Row">
+                <td id="tender5Label">Tender 5</td>
+                <td class="right"><input type="text" name="counted_tender5" id="counted_tender5"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_tender5"
+                    id="expected_tender5" disabled value="0.00"></td>
+                <td class="right variance" id="variance_tender5">0.00</td>
+                <td><input type="text" class="note" name="note_tender5" id="note_tender5"></td>
+              </tr>
+  
+              <tr id="tender6Row">
+                <td id="tender6Label">Tender 6</td>
+                <td class="right"><input type="text" name="counted_tender6" id="counted_tender6"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_tender6"
+                    id="expected_tender6" disabled value="0.00"></td>
+                <td class="right variance" id="variance_tender6">0.00</td>
+                <td><input type="text" class="note" name="note_tender6" id="note_tender6"></td>
+              </tr>
+  
+              <tr id="tender7Row">
+                <td id="tender7Label">Tender 7</td>
+                <td class="right"><input type="text" name="counted_tender7" id="counted_tender7"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_tender7"
+                    id="expected_tender7" disabled value="0.00"></td>
+                <td class="right variance" id="variance_tender7">0.00</td>
+                <td><input type="text" class="note" name="note_tender7" id="note_tender7"></td>
+              </tr>
+  
+              <tr id="tender8Row">
+                <td id="tender8Label">Tender 8</td>
+                <td class="right"><input type="text" name="counted_tender8" id="counted_tender8"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_tender8"
+                    id="expected_tender8" disabled value="0.00"></td>
+                <td class="right variance" id="variance_tender8">0.00</td>
+                <td><input type="text" class="note" name="note_tender8" id="note_tender8"></td>
+              </tr>
+  
+              <tr>
+                <td>Checks</td>
+                <td class="right"><input type="text" name="counted_checks" id="counted_checks"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_checks"
+                    id="expected_checks" disabled value="0.00"></td>
+                <td class="right variance" id="variance_checks">0.00</td>
+                <td><input type="text" class="note" name="note_checks" id="note_checks" placeholder="nbr of checks"></td>
+              </tr>
+  
+              <tr>
+                <td>Coupons</td>
+                <td class="right"><input type="text" name="counted_coupons" id="counted_coupons"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_coupons"
+                    id="expected_coupons" disabled value="0.00"></td>
+                <td class="right variance" id="variance_coupons">0.00</td>
+                <td><input type="text" class="note" name="note_coupons" id="note_coupons" placeholder="nbr of coupons"></td>
+              </tr>
+  
+              <tr>
+                <td>Cash Drops</td>
+                <td class="right"><input type="text" name="counted_drops" id="counted_drops"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_drops"
+                    id="expected_drops" disabled value="0.00"></td>
+                <td class="right variance" id="variance_drops">0.00</td>
+                <td><input type="text" class="note" name="note_drops" id="note_drops" placeholder="e.g. discrepancies"></td>
+              </tr>
+  
+              <tr id="pennyRound">
+                <td>Penny Round</td>
+                <td class="right"><input type="text" name="counted_round" id="counted_round"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_round"
+                    id="expected_round" disabled value="0.00"></td>
+                <td class="right variance" id="variance_round">0.00</td>
+                <td><input type="text" class="note" name="note_round" id="note_round" placeholder="e.g. discrepancies"></td>
+              </tr>
+  
+              <tr id="totalDepositRow">
+                <td>Total Deposit</td>
+                <td class="right" id="counted_totalDep">0.00</td>
+                <td class="right" id="expected_totalDep">0.00</td>
+                <td class="right variance" id="variance_totalDep">0.00</td>
+                <td>&nbsp;</td>
+              </tr>
+
+              <tr class="closeDrawerOuts">
+                <td>Opening Bank</td>
+                <td class="right"><input type="text" name="counted_bank" id="counted_bank"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_bank"
+                    id="expected_bank" disabled value="0.00"></td>
+                <td class="right variance" id="variance_bank">0.00</td>
+                <td><input type="text" class="note" name="note_bank" id="note_bank" placeholder="e.g. explain discrepancy"></td>
+              </tr>
+  
+              <tr class="closeDrawerOuts">
+                <td>Expense Payouts</td>
+                <td class="right"><input type="text" name="counted_payouts" id="counted_payouts"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_payouts"
+                    id="expected_payouts" disabled value="0.00"></td>
+                <td class="right variance" id="variance_payouts">0.00</td>
+                <td><input type="text" class="note" name="note_payout" id="note_payout" placeholder="e.g. explain misc"></td>
+              </tr>
+  
+              <tr id="houseCharge" class="closeDrawerOuts">
+                <td>House Charge</td>
+                <td class="right"><input type="text" name="counted_house" id="counted_house"
+                    value="0.00"></td>
+                <td class="right"><input type="text" class="expected" name="expected_house"
+                    id="expected_house" disabled value="0.00"></td>
+                <td class="right variance" id="variance_house">0.00</td> 
+                <td><input type="text" class="note" name="note_house" id="note_house" placeholder="nbr of slips"></td>
+              </tr>
+            </tbody>
+            <tfoot class="closeDrawerOuts">
+              <tr>
+                <th>Total</th>
+                <th class="right"><input type="text" class="expected" id="counted_total" disabled
+                    value="0.00"></th>
+                <th class="right"><input type="text" class="expected" id="expected_total" disabled
+                    value="0.00"></th>
+                <th class="right variance" id="variance">0.00</th>
+                <th>&nbsp;</th>
+              </tr>
+            </tfoot>
+          </table>
+  
+          <p class="muted no-print">Tip: use the tab key to move between counted fields quickly. Leave
+            expected fields blank if not known; enter the expected drawer total in those fields where available.</p>
+  
+          <div class="summary">
+            <div id="drawerCloseButtons" class="actions no-print">
+              <button type="button" id="recalcBtn">Recalc</button>
+              <button type="button" id="clearBtn">Clear</button>
+              <button type="button" id="saveBtn">SUBMIT</button>
+              <button type="button" id="cancelBtn">CANCEL</button>
+            </div>
+          </div>
+
+          <div id="summaryDiv">
+            <div class="summaryMainDiv" id="summaryTotalInDiv">
+              <fieldset>
+                <legend>Total In</legend>
+                <div class="summaryDivSubDivs">Sales</div><div class="summaryDivSubDivs summaryRightItem" id="summarySales">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryCouponLabel">Coupons</div><div class="summaryDivSubDivs summaryRightItem" id="summaryCoupons">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryTax1Label">Sales Tax</div><div class="summaryDivSubDivs summaryRightItem" id="summaryTax1">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryTax2Label">Tax 2</div><div class="summaryDivSubDivs summaryRightItem" id="summaryTax2">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryTax3Label">Tax 3</div><div class="summaryDivSubDivs summaryRightItem" id="summaryTax3">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryFlatTaxLabel">Flat Tax</div><div class="summaryDivSubDivs summaryRightItem" id="summaryFlatTax">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryVolTaxLabel">Flat Tax</div><div class="summaryDivSubDivs summaryRightItem" id="summaryVolTax">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryBottDepositsLabel">Bottle Deposits</div><div class="summaryDivSubDivs summaryRightItem" id="summaryBottDeposits">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryPaymentsLabel">Payments</div><div class="summaryDivSubDivs summaryRightItem" id="summaryPayments">0.00</div>
+                <div class="summaryDivSubDivs" id="summaryNetLottoLabel">Net Lotto</div><div class="summaryDivSubDivs summaryRightItem" id="summaryNetLotto">0.00</div>
+                <div class="summaryDivSubDivs"><strong>Total In</strong></div><div class="summaryDivSubDivs summaryRightItem" id="summaryTotalInCount"><strong>0.00</strong></div>
+              </fieldset>
+            </div>
+            <div class="summaryMainDiv summaryRightItem" id="summaryTotalOutDiv">
+              <fieldset>
+                <legend>Total Out</legend>
+                <div class="summaryDivSubDivs">Payouts</div><div class="summaryDivSubDivs summaryRightItem" id="summaryPayouts">0.00</div>
+                <div class="summaryDivSubDivs">Bottle Returns</div><div class="summaryDivSubDivs summaryRightItem" id="summaryReturns">0.00</div>
+                <div class="summaryDivSubDivs">House Charges</div><div class="summaryDivSubDivs summaryRightItem" id="summaryHouseCharges">0.00</div>
+                <div class="summaryDivSubDivs"><strong>Total Out</strong></div><div class="summaryDivSubDivs summaryRightItem" id="summaryTotalOutCount"><strong>0.00</strong></div>
+              </fieldset>
+              <br>
+              <fieldset id="overShortFieldset">
+                <legend>Over/Short</legend>
+                <div class="summaryDivSubDivs">Total In</div><div class="summaryDivSubDivs summaryRightItem" id="summaryOverShortIn">0.00</div>
+                <div class="summaryDivSubDivs">- Total Out</div><div class="summaryDivSubDivs summaryRightItem" id="summaryOverShortOut">0.00</div>
+                <div class="summaryDivSubDivs">+ Opening Bank</div><div class="summaryDivSubDivs summaryRightItem" id="summaryOpenBank">0.00</div>
+                <div class="summaryDivSubDivs">= Expected Drawer</div><div class="summaryDivSubDivs summaryRightItem" id="summaryExpectedDrawer">0.00</div>
+                <div class="summaryDivSubDivs">- Counted Drawer</div><div class="summaryDivSubDivs summaryRightItem" id="summaryCountedDrawer">0.00</div>
+                <div class="summaryDivSubDivs"><strong>= Over/Short</strong></div><div class="summaryDivSubDivs summaryRightItem" id="summaryOverShortTotal"><strong>0.00</strong></div>
+              </fieldset>
+            </div>
+          </div>
+          <div id="breakdownDiv">
+              <fieldset>
+                <legend>Sales Breakdown</legend>
+                <div class="summaryDivSubDivs">Nbr of Items</div><div class="summaryDivSubDivs summaryRightItem" id="breakdownItems">0</div>
+                <div class="summaryDivSubDivs">Nbr of Sales</div><div class="summaryDivSubDivs summaryRightItem" id="breakdownSales">0</div>
+                <div class="summaryDivSubDivs">Average Sale</div><div class="summaryDivSubDivs summaryRightItem" id="breakdownAvgSale">0.00</div>
+                <div class="summaryDivSubDivs">Average Price</div><div class="summaryDivSubDivs summaryRightItem" id="breakdownAvgPrice">0.00</div>
+                <div class="summaryDivSubDivs" id="breakdownTipsLabel">Tips</div><div class="summaryDivSubDivs summaryRightItem" id="breakdownTips">0.00</div>
+              </fieldset>
+          </div>
+
+  
+<!--  
+          <div id="drawerCloseSigs">
+            <div style="width:45%; display:inline-block">
+              <div style="border-top:1px solid #000; margin-top:40px; padding-top:6px">Clerk signature</div>
+            </div>
+            <div style="width:45%; display:inline-block; margin-left:4%">
+              <div style="border-top:1px solid #000; margin-top:40px; padding-top:6px">Manager signature</div>
+            </div>
+          </div>
+-->  
+        </form>
+  
+      </div>
+    </div>
+  </div>
+
+  <dialog id="cardProcessingDialog">
+    <div id="cardProcessingContent">
+      <div id="cardProcessingHeader" class="fqmodal-header">
+        <span id="cardProcessingTitle" class="settingsTitle">Card Processing</span>
+      </div>
+      <div id="cardProcessingBody">
+        <div id="cardProcessingIcon">
+          <svg id="cardProcessingIconSvg" width="32pt" height="32pt" version="1.1" viewBox="0 0 100 100"></svg>
+        </div>
+        <div id="cardProcessingMsg"></div>
+      </div>
+      <div id="cardProcessingBtnDiv">
+        <button id="cardProcessingOkBtn" class="goButton cardProcessingOkBtn" onclick="closeCardProcessingDialog();">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modalTipDialog">
+    <div id="modalTipContent">
+      <div id="modalTipHeader" class="fqmodal-header">
+        <span id="modalTipTitle" class="settingsTitle">Add Tip</span>
+      </div>
+      <div id="modalTipBody">
+        <label for="modalTipAmount" class="modalTipLabel">Amount:</label>
+        <input id="modalTipAmount" class="modalTipInput" type="text" autocomplete="off">
+        <br>
+        <label for="modalTipWho" class="modalTipLabel">Clerk:</label>
+        <input id="modalTipWho" class="modalTipInput" type="text" autocomplete="off">
+      </div>
+      <div id="modalTipBtnDiv">
+        <button id="modalTipCancelBtn" class="popCancelBtn modalTipCancelBtn" onclick="closeModalTipDialog();">Cancel</button>
+        <button id="modalTipOkBtn" class="goButton modalTipOkBtn" onclick="submitModalTip();">OK</button>
+      </div>
+    </div>
+  </dialog>
+  
+  <dialog id="posErrorDialog">
+    <div id="posErrorContent">
+      <div id="posErrorHeader" class="fqmodal-header">
+        <span id="posErrorTitle" class="posTitle">Error!</span>
+      </div>
+      <div id="posErrorBody">
+        <div id="posErrorIcon">
+          <svg id="posErrorIconSvg" width="32pt" height="32pt" version="1.1" viewBox="0 0 100 100"></svg>
+        </div>
+        <div id="posErrorMsg"></div>
+      </div>
+      <div id="posErrorBtnDiv">
+        <button id="posErrorOkBtn" class="goButton posErrorOkBtn">OK</button>
+      </div>
+    </div>
+  </dialog>
+  
+  <dialog id="notFoundDialog">
+    <div id="notFoundContent">
+      <div id="notFoundHeader" class="fqmodal-header">
+        <span id="notFoundTitle" class="posTitle">Not Found</span>
+      </div>
+      <div id="notFoundBody">
+        <div id="notFoundIcon">
+          <svg id="notFoundIconSvg" width="32pt" height="32pt" version="1.1" viewBox="0 0 100 100"></svg>
+        </div>
+        <div id="notFoundMsg">Item not found. Add to existing item?</div>
+      </div>
+      <div id="notFoundBtnDiv">
+        <button id="notFoundCancelBtn" class="goButton notFoundBtn" onclick="closeNotFoundDialog();">Cancel</button>
+        <button id="notFoundAddBtn" class="goButton notFoundBtn">Add</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="giftCardNbrDialog">
+    <div id="giftCardNbrContent">
+      <div id="giftCardNbrHeader" class="fqmodal-header">
+        <span id="giftCardNbrTitle" class="posTitle">Gift Card</span>
+      </div>
+      <div id="giftCardNbrBody">
+        <div id="giftCardNbrInputDiv">
+          <label for="giftCardNbrInput" class="giftCardNbrLabel">Enter gift card number:</label>
+          <br>
+          <input id="giftCardNbrInput" class="giftCardNbrInput" type="text" autocomplete="off">
+        </div>
+      </div>
+      <div id="giftCardNbrBtnDiv">
+        <button id="giftCardNbrCancelBtn" class="popCancelBtn giftCardNbrCancelBtn" onclick="closeGiftCardNbrDialog(true);">Cancel</button>
+        <button id="giftCardNbrOkBtn" class="goButton giftCardNbrOkBtn">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="checkNbrDialog">
+    <div id="checkNbrContent">
+      <div id="checkNbrHeader" class="fqmodal-header">
+        <span id="checkNbrTitle" class="posTitle">Check Nbr</span>
+      </div>
+      <div id="checkNbrBody">
+        <div id="checkNbrInputDiv">
+          <label for="checkNbrInput" class="checkNbrLabel">Enter check number:</label>
+          <br>
+          <input id="checkNbrInput" class="checkNbrInput" type="text" autocomplete="off">
+        </div>
+      </div>
+      <div id="checkNbrBtnDiv">
+        <button id="checkNbrCancelBtn" class="popCancelBtn checkNbrCancelBtn" onclick="closeCheckNbrDialog(true);">Cancel</button>
+        <button id="checkNbrOkBtn" class="goButton checkNbrOkBtn">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="reprintListDialog">
+    <div id="reprintListContent">
+      <div id="reprintListHeader" class="fqmodal-header">
+        <span id="reprintListTitle" class="posTitle">Reprint List</span>
+      </div>
+      <div id="reprintListBody">
+        <div id="reprintListHint">Filter list by:</div>
+        <div id="reprintListInputDiv">
+          <div><input type="checkbox" id="reprintListDrawerDo" class="reprintListCheckboxes" value="drawer"></div>
+          <div><label for="reprintListDrawer" class="reprintListLabel">Drawer:</label></div>
+          <div><input id="reprintListDrawer" class="reprintListInput" type="text" autocomplete="off" disabled></div>
+          <div><input type="checkbox" id="reprintListDateStartDo" class="reprintListCheckboxes" value="dateStart"></div>
+          <div><label for="reprintListDateStart" class="reprintListLabel">Date Start:</label></div>
+          <div><input id="reprintListDateStart" class="reprintListInput reprintListDateInput" type="date" autocomplete="off" disabled></div>
+          <div><input type="checkbox" id="reprintListDateEndDo" class="reprintListCheckboxes" value="dateEnd"></div>
+          <div><label for="reprintListDateEnd" class="reprintListLabel">Date End:</label></div>
+          <div><input id="reprintListDateEnd" class="reprintListInput reprintListDateInput" type="date" autocomplete="off" disabled></div>
+          <div><input type="checkbox" id="reprintListCustomerDo" class="reprintListCheckboxes" value="customer"></div>
+          <div><label for="reprintListCustomerDo" class="reprintListLabel">Customer:</label></div>
+          <div id="reprintListCustomerInputDiv">
+            <input id="reprintListCustomer" class="reprintListInput" type="text" autocomplete="off" disabled>
+            <span id="reprintListCustomerBttn" class="material-icons">open_in_new</span>
+          </div>
+        </div>
+      </div>
+      <div id="reprintListBtnDiv">
+        <button id="reprintListCancelBtn" class="popCancelBtn reprintListCancelBtn" onclick="closeReprintListDialog(true);">Cancel</button>
+        <button id="reprintListOkBtn" class="goButton reprintListOkBtn" onclick="doReprintFromList();">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="reprintListTableDialog">
+    <div id="reprintListTableContent">
+      <div id="reprintListTableHeader" class="fqmodal-header">
+        <span id="reprintListTableTitle" class="posTitle">Select Receipt</span>
+      </div>
+      <div id="reprintListTableBody">
+        <table id="reprintListTable">
+          <thead>
+            <tr>
+              <th>Inv Nbr</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Drawer</th>
+              <th>Amount</th>
+              <th>Customer</th>
+            </tr>
+          </thead>
+          <tbody id="reprintListTableBodyContent">
+          </tbody>
+        </table>
+      </div>
+      <div id="reprintListTableBtnDiv">
+        <button id="reprintListTableCancelBtn" class="popCancelBtn reprintListTableCancelBtn" onclick="closeReprintListTableDialog(true);">Cancel</button>
+        <button id="reprintListTableOkBtn" class="goButton reprintListTableOkBtn" onclick="doReprintFromListTable();">OK</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="pickPackDialog">
+    <div id="pickPackContent">
+      <div id="pickPackHeader" class="fqmodal-header">
+        <span id="pickPackTitle" class="posTitle">Pick Pack</span>
+      </div>
+      <div id="pickPackBody">
+        <div id="pickPackItem">
+          <span id="pickPackItemBrand"></span>
+          <br>
+          <span id="pickPackItemDesc"></span>
+          <br>
+          <span id="pickPackItemSize"></span>
+        </div>
+        <div id="pickPackTable">
+          <table>
+            <tbody id="pickPackTableBody">
+            </tbody>
+          </table>
+        </div>
+        <div id="pickPackHint">Spacebar to select</div>
+      </div>
+      <div id="pickPackBtnDiv">
+        <button id="pickPackCancelBtn" class="popCancelBtn pickPackCancelBtn" onclick="closePickPackDialog(true);">Cancel</button>
+      </div>
+    </div>
+  </dialog>
+
+  </body>
+
+</html>

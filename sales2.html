@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.100                                                    # ||
+|| # sales.html                                                           # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.posAdvisors.com | http://www.posAdvisors.com/license.html # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <title>encorePOS Sales Screen</title>
+
+  <link rel="manifest" href="sales.json">
+
+  <link rel="stylesheet" href="pickadate/themes/classic.css">
+  <link rel="stylesheet" href="pickadate/themes/classic.date.css">
+  <link rel="stylesheet" href="css/sweetalert.css">
+  <link rel="stylesheet" href="css/rangeslider.css">
+  <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
+  <link rel="stylesheet" href="css/timedropper.css">
+  <link rel="stylesheet" type="text/css" href="css/sales.css">
+  <link rel="stylesheet" href="css/vex.css" />
+  <link rel="stylesheet" href="css/vex-theme-wireframe.css" />
+
+  <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+  <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+
+  <script src='js/Chart.min.js'></script>
+  <script src='js/canvasloader-min.js'></script>
+  <script src="js/sales2.js"></script>
+  <script src="js/jquery-1.12.3.min.js"></script>
+  <script src="DataTables/datatables.min.js"></script>
+  <script src="js/vfs_fonts.js"></script>
+  <script src='pickadate/picker.js'></script>
+  <script src='pickadate/picker.date.js'></script>
+  <script src='js/sweetalert.min.js'></script>
+  <script src="js/rangeslider.min.js"></script>
+  <script src="js/timedropper.js"></script>
+  <script src="js/spin.js"></script>
+  <script src="js/shortcut.js"></script>
+  <script src="js/jquery.mobile-events.min.js"></script>
+  <script src="js/vex.combined.min.js"></script>
+  <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+
+</head>
+
+<body onload="salesLoader()">
+
+  <div id="pAhdr">
+    <img id="logoImage" src="images/pA_250.png" />
+    <div id="dateBox">
+      <span id="dateDisplay"></span><br>
+      <span id="legalDate"></span>
+    </div>
+  </div>
+
+  <div id="customerDiv" style="display: none;">
+  </div>
+  
+  <div id="cashSale">
+      Cash Sale
+  </div>
+  
+  <div id="barcBar">
+    <label for="scanText" id="scanTextLabel">Item Code:&nbsp;</label>
+    <input type="text" id="scanText"> <!-- readonly> -->
+    <input type="button" id="barcGo" value="Go->" onclick="get_item()">
+    <br>
+    <span id=msgDiv></span>
+  </div>
+
+  <div id="saleTableDiv">
+    <table id="saleTable" class="cell-border">
+      <thead id="saleTableHdr">
+        <tr>
+          <th id="sale_col0"></th>
+          <th id="sale_col1">Brand</th>
+          <th id="sale_col2">Description</th>
+          <th id="sale_col3">Size</th>
+          <th id="sale_col4">Qty</th>
+          <th id="sale_col5">Price</th>
+          <th id="sale_col6">Total</th>
+          <th id="sale_col7"></th>
+          <th id="sale_col8">Barcode</th>
+          <th id="sale_col9">Codenum</th>
+        </tr>
+      </thead>
+      <tbody id="saleTableBody">
+      </tbody>
+    </table>
+  </div>
+
+  <div id='menuButton'>
+    >
+<!--    <span id='menuButtonSpan'>></span>  -->
+  </div>
+
+  <div id="mySidenav" class="sidenav" data-xthreshold="30">
+      <input type="button" class="funcButton" id="helpBtn" value="Help &diams; F1" onclick="closeNav(); doNothing(this);" />
+      <input type="button" class="funcButton" id="logoutBtn" value="Logout &diams; F2" onclick="closeNav(); doNothing(this);" />
+      <input type="button" class="funcButton" id="itemListBtn" value="Items &diams; F3" onclick="closeNav(); showItemList();" />
+      <input type="button" class="funcButton" id="voidBtn" value="Void &diams; F4" onclick="closeNav(); clearAll();" />
+      <input type="button" class="funcButton" id="deleteBtn" value="Delete &diams; F5" onclick="closeNav();" />
+      <input type="button" class="funcButton" id="editBtn" value="Edit &diams; F6" onclick="closeNav(); doNothing(this);" />
+      <input type="button" class="funcButton" id="discBtn" value="Discount &diams; F7" onclick="closeNav(); doNothing(this);" />
+      <input type="button" class="funcButton" id="custListBtn" value="Customers &diams; F8" onclick="closeNav(); showCustList();" />
+      <input type="button" class="funcButton" id="tenderBtn" value="Tender &diams; F9" onclick="closeNav(); tenderSale();" />
+      <input type="button" class="funcButton" id="caseBtn" value="Case Sale &diams; F10" onclick="closeNav(); doNothing(this);" />
+  </div>
+  
+  <div id="totalTableDiv">
+    <table id="totalTable" class="display" style="width: 100%;">
+      <tbody id="totalTableBody">
+        <tr class="totalExpander">
+          <td id="totalExpanderObj" colspan="2" onclick="totalDivResize()"><img src='/images/up-arrow.png'></td>    <!-- &wedge;</td> -->
+        </tr>
+        <tr class="subTotalRow">
+          <td class="totalLabels">Sub-Total :</td>
+          <td id="subTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr class="subTotalRow">
+          <td class="totalLabels">Sales Tax :</td>
+          <td id="taxTotal" class="totalAmounts">0.00</td>
+        </tr>
+        <tr>
+          <td id="totalBoxTotalLabel">Total :</td>
+          <td id="total">0.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Customer List Modal window -->
+  <div id="Modal_custList" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_custList_Content" class="except-modal-content">
+      <div id="Modal_custList_Body" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="custListTitleBar" class="titleBar_Grn" data-ythreshold="10">
+          <div id="custListTitle" class="titleBarBlockLeft_Grn" style="position: relative; top: -5px;">Customer List</div>
+          <div id="custListClose" class="titleBarBlockRight_Grn">
+            <span id="Modal_custList_close" class="close" onclick="closeCustList();">&times;</span>
+          </div>
+        </div>
+        <div id="custListTableDiv">
+          <div id="custListTableWrapper" style="padding: 10px;">
+            <table id="custListTable" class="display" style="border: 1px solid black; font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+              <thead id="custListHdr">
+                <tr>
+                  <th id="custList_hdr1">Number</th>
+                  <th id="custList_hdr2">Name</th>
+                  <th id="custList_hdr3">Phone</th>
+                  <th id="custList_hdr4">Purchases</th>
+                  <th id="custList_hdr5">Last Order</th>
+                  <th id="custList_hdr6">City, ST</th>
+                  <th id="custList_hdr7">Zip</th>
+                </tr>
+              </thead>
+              <tbody id="custListTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product List Modal window -->
+  <div id="Modal_itemList" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_itemList_Content" class="except-modal-content">
+      <div id="Modal_itemList_Body" class="except-modal-body" style="height: 100%; max-height: 100%;">
+        <div id="itemListTitleBar" class="titleBar_Grn">
+          <div id="itemListTitle" class="titleBarBlockLeft_Grn" style="position: relative; top: -5px;">Product List</div>
+          <div id="itemListClose" class="titleBarBlockRight_Grn" onclick="closeItemList();">
+            <span id="Modal_itemList_close" class="close">&times;</span>
+          </div>
+        </div>
+        <div id="itemListTableDiv">
+          <div id="itemListTableWrapper" style="padding: 10px;">
+            <table id="itemListTable" class="display" style="border: 1px solid black; font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+              <thead id="itemListHdr">
+                <tr>
+                  <th id="itemList_hdr1">Barcode</th>
+                  <th id="itemList_hdr2">Brand</th>
+                  <th id="itemList_hdr3">Description</th>
+                  <th id="itemList_hdr4">Size</th>
+                  <th id="itemList_hdr5">Type</th>
+                  <th id="itemList_hdr6">Price</th>
+                  <th id="itemList_hdr0">Code_num</th>
+                </tr>
+              </thead>
+              <tbody id="itemListTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tender Modal window -->
+  <div id="ModalTender" class="modal" data-lFirstEnter=true>
+    <div id="ModalTenderContent" class="modal-chart-content">
+      <div style="height: 30px; width: 98%; text-align: right; position: absolute; top: 0px;">
+        <span id="ModalTenderClose" class="close" style="color: black;" onclick="closeTender()">&times;</span>
+      </div>
+      <div id="tenderTitle">
+        Tender
+      </div>
+      <div class="tenderContainer">
+        <div id="tenderTypes">
+          <div class="tenderButton" id="cashButton" onclick="tenderCashButton()">Cash</div>
+          <div class="tenderButton" id="checkButton" onclick="tenderCheckButton()">Check</div>
+          <div class="tenderButton">MC/Visa</div>
+          <div class="tenderButton">Account</div>
+          <div class="tenderButton">AmEx</div>
+          <div class="tenderButton">Debit</div>
+          <div class="tenderButton">Gift</div>
+          <div class="tenderButton">Foreign</div>
+          <br>
+          <div class="dollarButton" id="doll_100" onclick="dollarAdd(100)">$100</div>
+          <div class="dollarButton" id="doll_50" onclick="dollarAdd(50)">$50</div>
+          <div class="dollarButton" id="doll_20" onclick="dollarAdd(20)">$20</div>
+          <div class="dollarButton" id="doll_10" onclick="dollarAdd(10)">$10</div>
+          <div class="dollarButton" id="doll_5" onclick="dollarAdd(5)">$5</div>
+          <div class="dollarButton" id="doll_1" onclick="dollarAdd(1)">$1</div>
+        </div>
+        <div id="tenderDisplay">
+          <!--              
+              <div class="tenderLine">
+                <span class="title">Total Due:</span>
+                <span class="amount">$ 123.23</span>
+              </div>
+              <div class="tenderLine">
+                <span class="titleRed">- Cash</span>
+                <span class="amountRed">100.00</span>
+              </div>
+              <div class="tenderLine">
+                <span class="title">Balance</span>
+                <span class="amount">23.23</span>
+              </div>
+-->
+        </div>
+        <div id="tenderInputDiv" class="two_decimals">
+          <input type="text" id="tenderInput" value="0.00" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode==46"></input></div>
+        <div id="tenderBottom">
+          OK
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>

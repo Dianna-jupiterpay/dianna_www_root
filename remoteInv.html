@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.531                                                    # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>posAdvisors</title>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+    <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            font-family: Trebuchet, sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            background-color: #fcfae8;
+            color: #43a3d7;
+        }
+
+        #myHeader {
+            background-color: white;
+            height: 70px;
+            border-bottom: 2px solid #43a3d7;
+        }
+
+        .navLogo {
+            margin-left: 40px;
+        }
+
+        #paLogo {
+            margin-top: 15px;
+        }
+
+        #myBody {
+            width: 95%;
+            margin-top: 40px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $.post('/getRini?')
+                .success(function (data) {
+                    $("#myLink").attr({ "href": data.file, "download": "remoteInv.ini" });
+                    $("#myLink").html($("#myLink").attr("download"));
+                    $("#myLink")[0].click();
+                })
+                .error(function (jqxhr, textStatus, errorThrown) {
+                    alert(textStatus, errorThrown)
+                });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="myHeader">
+        <a class="navLogo" href="split.html">
+            <img id="paLogo" src="./images/pA.png" alt="posAdvisors" height="50" width="188">
+        </a>
+    </div>
+    <div id="myBody">
+        Download link:
+        <a id="myLink">download</a>
+    </div>
+</body>
+
+</html>

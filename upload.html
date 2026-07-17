@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.532                                                    # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>posAdvisors</title>
+    <script src="js/jquery-1.12.3.min.js"></script> 
+    <link rel="stylesheet" type="text/css" href="css/dash.css">
+    <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+    <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            font-family: Trebuchet,sans-serif;
+            font-weight: normal;
+            font-style: normal; 
+            background-color: #fcfae8;
+        }
+        nav{
+            position: fixed;
+            width: 100%;
+            top: 0px;
+            padding-bottom: 20px;
+        }
+        .navbar {
+            width: 100%;
+            list-style-type: none;
+            overflow: hidden;
+            background-color: white;
+            color: #41b687;
+            font-family: verdana;
+            font-size: 18px;
+            font-weight: 900;
+            height: 52px;
+            padding-bottom: 7px;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            margin-right: 60px;
+            border-bottom: 2px #43a3d7 solid;
+            z-index: 100;
+        }
+        .navLogo {
+            float: left;
+            padding-left: 40px;
+            padding-top: 5px;
+            padding-bottom: 0px;
+            padding-right: 60px;
+        }
+        .spacer {
+            width: 100%;
+            height: 40px;
+        }
+        .parent{
+            text-align:center;
+        }
+        h2{
+            height: 100px;
+            width: 350px;
+            background-color: white;
+            padding: 0px;
+            margin: 0px;
+            text-align:center;
+            border: 0px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 1px solid #ccc;
+        }
+        h2 img{
+            padding-top: 30px;
+            width: 250px;
+            height: 60px;
+            align: center;
+        }
+        div.container{
+            width: 350px;
+            height: 610px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        div.main{
+            width: 350px;
+            padding: 0px;
+            border: 2px solid #43a3d7;
+            border-radius: 10px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            background-color: #f7f1ba;
+        }
+        div.entry{
+            margin: 25px;
+            margin-top: 40px;
+            align-text: center;
+        }
+        form {
+            align-text: center;
+        }
+        label{
+            color: #43a3d7;
+            font-family: Trebuchet,sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        input[type=file] {
+             height: 40px;
+             width: 250px;
+             font-size: 16px;
+             font-family: verdana, sans-serif;
+             margin-top: 40px;
+             margin-left: auto;
+             margin-right: auto;
+        }
+        input[type=button], input[type=submit] {
+            background: linear-gradient(#f695ab 5%, #fde8ed 100%);
+            border: 1px solid #f695ab;
+            color: #4E4D4B;
+            font-family: Trebuchet,sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 50%;
+            border-radius: 5px;
+            padding: 10px 0;
+            outline:none;
+            align: center;
+            margin-top: 40px;
+            margin-right: auto;
+            margin-bottom: 50px;
+            margin-left: auto;
+        }
+        input[type=button]:hover, input[type=submit]:hover {
+            background: linear-gradient(#fde8ed 5%, #f695ab 100%);
+        }
+        input[type=button]:focus, input[type=submit]:focus {
+            background: linear-gradient(#fde8ed 5%, #f695ab 100%);
+            border: 2px solid #43a3d7;
+        }
+        #fileOutput {
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="spacer">
+        &nbsp;
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <h2>
+               <img src="images\pA_250.png" alt="posAdvisors">
+            </h2>
+            <div class="parent">
+                <div id="formdiv">
+                  <form enctype="multipart/form-data" method="post" name="fileinfo">
+                    <input id="licenseFileInput" type="file" name="file" accept=".pos" required /><br>
+                    <input type="submit" value="Upload" style="margin-top: 40px;" />
+                  </form>
+                </div>
+                <div id="fileOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+/* BEGIN: onChange handler for license file selector -- check for valid size */
+$("#licenseFileInput").change( function() {
+    var nsize = $("#licenseFileInput")[0].files[0].size;
+   console.log( "upLoad file size = " + nsize );
+   if ( nsize < 256 || nsize > 257 ) {
+       $("#licenseFileInput").val("");
+       $("#fileOutput").text("The selected file is not the correct size.");
+   };
+});
+/* END: onChange handler */
+
+/* BEGIN: Upload License File event handler*/
+  var form = document.forms.namedItem("fileinfo");
+
+  form.addEventListener('submit', function(ev) {
+    var oOutput = document.getElementById("fileOutput"),
+      oData = new FormData(form);
+
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", "uploadCertificate?", true);
+    oReq.onload = function(oEvent) {
+      if (oReq.status == 200) {
+        oOutput.innerHTML = oReq.responseText;
+        if ( oReq.responseText.slice(0,9) === "Thank you" ) {
+          $("#formdiv").hide();
+          $("#fileOutput").after( "<br><br><input type=button value='Go Login' id='loginBtn' onclick='goLogin()'>" );
+        };
+      } else {
+        oOutput.innerHTML = "Error " + oReq.status + " occurred when trying to upload your file.<br \/>";
+      }
+    };
+
+    oReq.send(oData);
+    ev.preventDefault();
+    },
+  false );
+/* END: Upload License File event handler*/
+
+    function goLogin() {
+        location.replace("login.html");
+    };
+
+    </script>
+  </body>
+</html>  

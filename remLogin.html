@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.2.200.865                                                # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2026 Jupiter Software, LLC  All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>posAdvisors</title>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/remLogin.css">
+    <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+    <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="image/ios_icon.png">
+</head>
+
+<body onload="uidFocus()">
+    <div class="spacer">
+        &nbsp;
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <h2>
+                <img src="images\pA_250.png" alt="posAdvisors">
+            </h2>
+            <div class="entry">
+                <label>User Name :</label>
+                <input type="text" autocorrect="off" autocapitalize="none" name="UID" id="UID" />
+                <label>Password :</label>
+                <input type="password" name="PWD" id="PWD" />
+                <label>Store Nbr :</label>
+                <input type="text" autocorrect="off" autocapitalize="none" name="SNbr" id="SNbr" />
+                <div class="parent">
+                    <span id="msg">&nbsp;</span>
+                    <br>
+                    <input type=button value='Login' id="submit">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var firstTime = 'no';
+
+        $('#PWD').keypress(function (e) {
+            var key = e.which;
+            var cSNbr = $("#SNbr").val();
+
+            if (key == 13 && cSNbr !== "")  // the enter key code
+            {
+                e.stopPropagation();
+                doLogin();
+                return;
+            };
+        });
+
+        $('#SNbr').keypress(function (e) {
+            var key = e.which;
+            var cPWD = $("#PWD").val();
+
+            if (key == 13 && cPWD !== "")  // the enter key code
+            {
+                e.stopPropagation();
+                doLogin();
+                return;
+            };
+        });
+
+        $('#submit').on( 'click', function(e) { e.stopPropagation(); doLogin(); } );
+
+        function uidFocus() {
+            var oldUID = localStorage.uid;
+            var oldSN = localStorage.snbr;
+
+            document.addEventListener('touchstart', function addtouchclass(e) {  // first time user touches the screen
+                setCookie( 'isTouch', 'true', 1 );              // add "can-touch" class to document root using classList API
+                document.removeEventListener('touchstart', addtouchclass, false); // de-register touchstart event
+            }, false)
+
+            if (typeof oldSN === 'string' && oldSN !== 'undefined') {
+                $("#SNbr").val($.trim(oldSN));
+            };
+
+            if (typeof oldUID === 'string' && oldUID !== 'undefined') {
+                $("#UID").val($.trim(oldUID));
+                $("#PWD").focus();
+            };
+
+        }
+
+        function doLogin() {
+            var cUID = $("#UID").val();
+            var cPWD = $("#PWD").val();
+            var cSNbr = $("#SNbr").val();
+
+            if (cUID === "") {
+                $("#msg").html("Please enter a User ID.");
+                document.login.UID.focus();
+                return;
+
+            } else if (cPWD === "") {
+                $("#msg").html("Please enter your password.");
+                document.login.PWD.focus();
+                return;
+
+            } else if (cSNbr === "") {
+                $("#msg").html("Please enter your store number.");
+                document.login.SNbr.focus();
+                return;
+
+            };
+
+            // blank out in case we are here a second (or more) time....
+            $("#msg").focus();
+            $("#msg").html("Processing...");
+            $("#submit").prop('disabled', true);
+
+            $.post("rlogin?", { UID: cUID, PWD: cPWD, SN: cSNbr })
+                .done(function (obj) {
+                    if (obj.result !== "success") {
+                        if (obj.hasOwnProperty("asleep")) {
+                            $("#msg").html("The store server is not responding.");
+                            $("#submit").prop('disabled', false);
+                        } else if (obj.hasOwnProperty("msg")) {
+                            $("#msg").html(obj.msg);
+                            $("#submit").prop('disabled', false);
+                        } else {
+                            $("#msg").text("Invalid login");
+                            $("#submit").prop('disabled', false);
+                        }
+                    } else if ( obj.admin ) {
+                        location.replace(obj.site);
+                    } else {
+                        if (typeof (Storage) !== "undefined") {
+                            localStorage.setItem("uid", cUID);
+                            localStorage.setItem("snbr", cSNbr);
+                        }
+                        setCookie("uid", cUID, 1);
+                        setCookie("user", obj.user, 1);
+                        setCookie("userLast", obj.userLast, 1);
+                        setCookie("sLevel", obj.sLevel, 1);
+                        setCookie("snbr", cSNbr, 1);
+                        setCookie("doe", obj.doe, 1);
+                        setCookie("updateTime", obj.updateTime, 1);
+                        setCookie("autoLogout", obj.autoLogout, 1);
+                        setCookie("cVer", obj.cVer, 1);
+
+                        if (obj.reports) {
+                            setCookie("reports", obj.reports, 1);
+                        }
+
+                        if (obj.multiSite) {
+                            setCookie("aStores", obj.aStores, 1);
+                            setCookie("host", cSNbr, 1);
+                            location.replace("remMulti.html");
+                        } else {
+                            location.replace("remDash.html");
+                        };
+                    }
+                })
+                .fail(function () {
+                    $("#msg").html("Unable to connect to server!");
+                    $("#submit").prop('disabled', false);
+                    return;
+                })
+        };
+
+        function setCookie(cname, cvalue, exdays) {
+            var expires = '';
+            if (exdays) {
+                var d = new Date();
+                d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                expires = ";expires="+ d.toUTCString();
+            }
+            document.cookie = cname + "=" + cvalue + expires + ";path=/";
+        }
+               
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.1.520                                                    # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2018 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.posAdvisors.com | http://www.posAdvisors.com/license.html # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>posAdvisors</title>
+    <script src="js/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/remLogin.css">
+    <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+    <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="image/ios_icon.png">
+</head>
+
+<body>
+    <div class="spacer">
+        &nbsp;
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <h2>
+                <img src="images\pA_250.png" alt="posAdvisors">
+            </h2>
+            <div class="entry">
+                <label>User Name :</label>
+                <input type="text" autocorrect="off" autocapitalize="none" name="UID" id="UID" />
+                <label>Password :</label>
+                <input type="password" name="PWD" id="PWD" />
+                <label>Store Nbr :</label>
+                <input type="text" autocorrect="off" autocapitalize="none" name="SNbr" id="SNbr" />
+                <div class="parent">
+                    <span id="msg">&nbsp;</span>
+                    <br>
+                    <input type=button value='GetInno' id="submit" onclick="getInno()">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getInno() {
+            $.post("getFile( 'encorePOS_v1_1_601.exe' )" );
+        };
+
+    </script>
+</body>
+
+</html>

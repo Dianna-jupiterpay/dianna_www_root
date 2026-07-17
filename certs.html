@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>posAdvisors</title>
+    <script src="js/jquery-1.12.3.min.js"></script> 
+    <!--<link rel="stylesheet" type="text/css" href="css/dash.css">-->
+    <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+    <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            font-family: Trebuchet,sans-serif;
+            font-weight: normal;
+            font-style: normal; 
+            background-color: #fcfae8;
+        }
+        nav{
+            position: fixed;
+            width: 100%;
+            top: 0px;
+            padding-bottom: 20px;
+        }
+        .navbar {
+            width: 100%;
+            list-style-type: none;
+            overflow: hidden;
+            background-color: white;
+            color: #41b687;
+            font-family: verdana;
+            font-size: 18px;
+            font-weight: 900;
+            height: 52px;
+            padding-bottom: 7px;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            margin-right: 60px;
+            border-bottom: 2px #43a3d7 solid;
+            z-index: 100;
+        }
+        .navLogo {
+            float: left;
+            padding-left: 40px;
+            padding-top: 5px;
+            padding-bottom: 0px;
+            padding-right: 60px;
+        }
+        .spacer {
+            width: 100%;
+            height: 40px;
+        }
+        .parent{
+            text-align:center;
+        }
+        h2{
+            height: 100px;
+            width: 350px;
+            background-color: white;
+            padding: 0px;
+            margin: 0px;
+            text-align:center;
+            border: 0px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 1px solid #ccc;
+        }
+        h2 img{
+            padding-top: 30px;
+            width: 250px;
+            height: 60px;
+            align: center;
+        }
+        div.container{
+            width: 350px;
+            height: 610px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        div.main{
+            width: 350px;
+            padding: 0px;
+            border: 2px solid #43a3d7;
+            border-radius: 10px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            background-color: #f7f1ba;
+        }
+        div.entry{
+            margin: 25px;
+        }
+        input[type=text],input[type=password]{
+            width: 100%;
+            height: 40px;
+            padding: 5px;
+            margin-bottom: 25px;
+            margin-top: 5px;
+            border: 2px solid #ccc;
+            color: #4f4f4f;
+            font-size: 16px;
+            border-radius: 5px;
+            -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+            -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+            box-sizing: border-box;         /* Opera/IE 8+ */
+        }
+        label{
+            color: #43a3d7;
+            font-family: Trebuchet,sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        input[type=button]{
+            background: linear-gradient(#f695ab 5%, #fde8ed 100%);
+            border: 1px solid #f695ab;
+            color: #4E4D4B;
+            font-family: Trebuchet,sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 50%;
+            border-radius: 5px;
+            padding: 10px 0;
+            outline:none;
+            align: center;
+            margin-top: 40px;
+            margin-right: auto;
+            margin-bottom: 50px;
+            margin-left: auto;
+        }
+        input[type=button]:hover{
+            background: linear-gradient(#fde8ed 5%, #f695ab 100%);
+        }
+        input[type=button]:focus{
+            background: linear-gradient(#fde8ed 5%, #f695ab 100%);
+            border: 2px solid #43a3d7;
+        }
+        #msg {
+            font-size: 18px;
+            color: red;
+        }
+    </style>
+  </head>
+  <body onload="snbrFocus()">
+    <div class="spacer">
+        &nbsp;
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <h2>
+               <img src="images\pA_250.png" alt="posAdvisors">
+            </h2>
+            <div class="entry">
+                <form name='buildCert'>
+                    <label>Serial Nbr :</label>
+                    <input type="text" name="serial" id="snbr"/>
+                    <label>Exp Date (yyyymmdd) :</label>
+                    <input type="text" name="doe" id="doe"/>
+                    <div class="parent">
+                        <span id="msg">&nbsp;</span><br>
+                        <input type=button value='Submit' id="submit" onclick="buildFile()">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    $('#snbr').keypress(function (e) {
+      var key = e.which;
+      if(key == 13)  // the enter key code
+        {
+          document.buildCert.doe.focus();
+          return false;  
+        };
+    });
+
+    $('#doe').keypress(function (e) {
+      var key = e.which;
+      if(key == 13)  // the enter key code
+        {
+          $('#submit').click();
+          return false;  
+        };
+    });
+
+    function snbrFocus() {
+        document.buildCert.serial.focus();
+    };
+
+    function buildFile() {
+      var csnbr = $("#snbr").val();
+      var cdoe  = $("#doe").val();
+      
+      if ( csnbr === "" ) {
+         $("#msg").html("Please enter a serial number.");
+          document.buildCert.snbr.focus();
+          return;
+
+      } else if ( cdoe === "" ) {
+         $("#msg").html("Please enter expiration date.");
+          document.buildCert.doe.focus();
+          return;
+      };
+
+      // blank out in case we are here a second (or more) time....
+      $("#msg").html("Processing...");
+    
+      $.post( "buildCert?", { snbr: csnbr, doe: cdoe }, function( obj ) {
+         if ( obj.result !== "success" ) {
+            if ( obj.hasOwnProperty("msg") ) {
+              $("#msg").html( obj.msg );
+            } else {
+              $("#msg").text("Unsuccessful.");
+            }
+         } else {
+              $("#msg").text("File: " + csnbr + ".pos");
+         }
+      });
+    };
+
+    </script>
+  </body>
+</html>  

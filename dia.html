@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Dialog with Blur</title>
+    <style>
+        body {
+            margin: 0px;
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+        .main-content {
+            height: 100vh;
+            text-align: center;
+            padding-top: 150px;
+            background-image: linear-gradient(to right, #ab77dd 0%, #8ec5fc 100%);
+            color: #333;
+        }
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(5px);
+        }
+        dialog {
+            border: none;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            text-align: center;
+        }
+        dialog h2 {
+            margin-top: 0;
+            color: #4A90E2;
+        }
+        dialog button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        <h1>Modal Dialog Window Overlay With Blur Tutorial</h1>
+        <h2>Application content will be blurred when the modal opens.</h2>
+        <button id="openModalBtn">Open Modal</button>
+    </div>
+    
+    <dialog id="myModal">
+        <h2>Important Notification</h2>
+        <p>This is a modal dialog. Notice how the background page is blurred and cannot be interacted with until you close this box.</p>
+        <button id="popSecondDialog">Pop</button>
+        <button id="closeModalBtn">Close Modal</button>
+    </dialog>
+    
+    <dialog id="myPop">
+        <h2>Another Dialog</h2>
+        <p>Some text</p>
+        <button id="closePopBtn">Close Modal</button>
+    </dialog>
+
+    <script>
+        const modal = document.getElementById('myModal');
+        const popModal = document.getElementById('myPop');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const popSecondDialog = document.getElementById('popSecondDialog');
+        const closePopBtn = document.getElementById('closePopBtn');
+
+        openBtn.addEventListener('click', () => {
+            modal.showModal();
+        });
+        closeBtn.addEventListener('click', () => {
+            modal.close();
+        });
+        popSecondDialog.addEventListener('click', () => {
+            popModal.showModal();
+        });
+        closePopBtn.addEventListener('click', () => {
+            popModal.close();
+        });
+
+        // Optional: Close on backdrop click (native <dialog> doesn't do this by default)
+        modal.addEventListener('click', (e) => {
+            const dialogDimensions = modal.getBoundingClientRect();
+            if (
+                e.clientX < dialogDimensions.left ||
+                e.clientX > dialogDimensions.right ||
+                e.clientY < dialogDimensions.top ||
+                e.clientY > dialogDimensions.bottom
+            ) {
+                modal.close();
+            }
+        });
+    </script>
+    
+</body>
+</html>

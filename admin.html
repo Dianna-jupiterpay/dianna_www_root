@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<!--========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.2.200.865                                                # ||
+|| # ******************************************************************** # ||
+|| # Copyright ©2016-2026 posAdvisors, LLC       All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ****************** encorePOS IS NOT FREE SOFTWARE ****************** # ||
+|| # http://www.posAdvisors.com | http://www.posAdvisors.com/license.html # ||
+|| ######################################################################## ||
+\*=========================================================================-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+  <title>posAdvisors Admin Console</title>
+  <link rel="stylesheet" href="pickadate/themes/classic.css">
+  <link rel="stylesheet" href="pickadate/themes/classic.date.css">
+  <link rel="stylesheet" href="css/sweetalert.css">
+  <link rel="stylesheet" href="css/rangeslider.css">
+  <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
+  <link rel="stylesheet" href="css/jquery-ui-1.12.1.css">
+  <link rel="stylesheet" href="css/timedropper.css">
+  <link rel="stylesheet" type="text/css" href="css/admin.css">
+
+  <link id="favicon" rel="icon" type="image/png" sizes="16x16">
+  <link id="favicon2x" rel="icon" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="image/ios_icon.png">
+  
+  <script src='js/Chart.min.js'></script>
+  <script src='js/canvasloader-min.js'></script>
+  <script src="js/admin.js"></script>
+  <script src="js/jquery-1.12.3.min.js"></script> 
+  <script src="js/jquery-ui-1.12.1.js"></script>
+  <script src="DataTables/moment.js"></script>
+  <script src="DataTables/datatables.min.js"></script>
+  <script src="DataTables/datetime.js"></script>
+  <script src="js/vfs_fonts.js"></script>
+  <script src='pickadate/picker.js'></script>
+  <script src='pickadate/picker.date.js'></script>
+  <script src='js/sweetalert.min.js'></script>
+  <script src="js/rangeslider.min.js"></script>
+  <script src="js/timedropper.js"></script>
+  <script src="js/spin.js"></script>
+  <script src="js/version_compare.js"></script>
+</head>
+
+<body onload="dashLoader()">
+  <nav>
+    <ul class="navbar" id="pAnavbar">
+      <li>
+        <a class="navLogo" href="http://www.posAdvisors.com">
+          <img src="./images/pA.png" alt="posAdvisors" height="50" width="188">
+        </a>
+      </li>
+      <div class="navfiller">&nbsp;</div>
+      <a class="navUser" href="#" onclick="navUserDropdown()">
+        <img id="userImage" src="images/user_24.png" height="24" width="24" style="padding-right: 10px; padding-top: 4px;">
+        <span id="welcome">Welcome</span>
+      </a>
+    </ul>
+  </nav>
+
+  <div id="userDropdown" class="navUserDropdown">
+    <a href="#" onclick="myAccount()">My Account</a>
+    <a href="remLogout?">Logout</a>
+  </div>
+
+  <div class="spacer">
+    &nbsp;
+  </div>
+
+    <div id="navUtil">
+      <ul>
+        <li class="sub-menu-parent" id="utilInv">
+          <a href="#">Software
+            <br>
+            <img src="images/software.png" height="55" width="61" style="padding: 10px;">
+          </a>
+          <ul class="sub-menu" id="subUtilInv" style="padding-left: 0px">
+            <li>
+              <a href="#" onclick="softControl();">
+                <img src="images/softcontrol.png" height="55" width="61">
+                <span>Update Control</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="showUploadTable();">
+                <img src="images/uploadcontrol.png" height="55" width="61">
+                <span>Upload Licenses</span>
+              </a>
+            </li>
+      </ul>
+    </div>
+
+<!-- Account Modal window -->
+<div id="Modal_Account" class="fqmodal">
+  
+  <!-- Modal content -->
+  <div id="Modal_Account_Content" class="fqmodal-content">
+    <div class="fqmodal-header">
+      posAdvisors encorePOS Account
+      <span id="Modal_Account_close" class="fqclose" onclick="closeAccount()">&times;</span>
+    </div>
+    <div id="Modal_Account_Body" class="fqmodal-body">
+
+      <h2 class="setH2">Account License</h2>
+      <div id="accountProfile">
+        <span id="acctSerialNbr">POS Serial Nbr: </span>
+          <br>
+          <br>
+          <input type="button" id="userListButton" class="pAbutton" value="Users" onclick="showUsersTable()" style="margin-left: 33px;"
+          />
+        </span>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <p style="text-align: center;">
+          <input type="button" id="setCancel" class="pAbutton" value="Close" onclick="closeAccount()">
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <!-- Users Modal window -->
+  <div id="Modal_Users" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_Users_Content" class="except-modal-content">
+      <div class="modal-header" height="10%">
+        <span id="Users_hdr">Authorized Users</span>
+        <span id="Modal_Users_close" class="close">&times;</span>
+      </div>
+      <div id="Modal_Users_Body" class="except-modal-body">
+        <div id="userstablediv">
+          <div id="userstablewrapper">
+            <div style="text-align: center;">Authorized Users</div>
+            <table id="userstable" class="display" style="font-size: 14px; background-color: #faf6d1; color: #1f6b93; cellspacing: 0; width: 100%;">
+              <thead id="usersHdr">
+                <tr>
+                  <th id="users_col1">User ID</th>
+                  <th id="users_col2">First Name</th>
+                  <th id="users_col3">Last Name</th>
+                  <th id="users_col7">Security Level</th>
+                </tr>
+            </thead>
+              <tbody id="userstablebody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <h2></h2>
+          <p style="text-align: center;">
+            <input type="button" id="userClose" class="pAbutton" value="Close" onclick="userClose()">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Uploads Modal window -->
+  <div id="Modal_Uploads" class="except-modal">
+    <!-- Modal content -->
+    <div id="Modal_Uploads_Content" class="except-modal-content">
+      <div class="modal-header" id="uploadsTitle" height="10%">
+        <span id="Uploads_hdr">Authorized Uploads</span>
+        <!--<span id="Modal_Uploads_close" class="close" onclick="uploadClose()">&times;</span>-->
+      </div>
+      <div id="Modal_Uploads_Body" class="except-modal-body">
+        <div id="uploadstablediv">
+          <div id="uploadstablewrapper">
+            <div style="text-align: center;"></div>
+            <table id="uploadstable" class="display" width="100%">
+              <thead id="uploadsHdr">
+                <tr>
+                  <th id="uploads_col1">Serial Nbr</th>
+                  <th id="uploads_col2">Store Name</th>
+                  <th id="uploads_col3">Expiry Date</th>
+                </tr>
+              </thead>
+              <tbody id="uploadstablebody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top: 20px;">
+          <h2></h2>
+          <p style="text-align: center;">
+            <input type="button" id="uploadClose" class="pAbutton" value="Close" onclick="uploadClose()">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal window -->
+  <div id="Modal_Settings" class="fqmodal">
+
+    <!-- Modal content -->
+    <div id="Modal_Settings_Content" class="fqmodal-content">
+      <div class="fqmodal-header">
+        encorePOS Update Control
+        <span id="Modal_Settings_close" class="fqclose" onclick="closeSoftControl();">X</span>
+      </div>
+      <div id="Modal_Settings_Body" class="fqmodal-body">
+
+        <h2 class="setH2">encorePOS Production Release</h2>
+        <div class="verInfo">
+          <br>
+          The current production release is:&nbsp;
+          <span id="verInfoSpan"></span>
+        </div>
+        <br><br>
+        <h2 class="setH2">encorePOS New Release</h2>
+        <div class="verInfo">
+          <br>
+          <label for='newVerNbr'>New release version number:</label>
+          <input type="tel" id='newVerNbr' onchange="toggleSoftControl();" onkeyup="this.onchange();" >
+          <br><br>
+          <input id="releaseAll" type="radio" name="releaseScope" value="1" onclick="toggleSoftControl();"/>
+          <label for="releaseAll">Release to ALL (new production)</label>
+          <br><br>
+          <input id="releaseLtd" type="radio" name="releaseScope" value="2" onclick="toggleSoftControl();" checked/>
+          <label for="releaseLtd">Limited to these serial nbrs:</label>
+          <div style='margin: 20px 0px 0px 50px; width: 200px;'>
+            <select id='betaSerials' size='8'>
+              <option value='9200032'>9200032</option>
+            </select>
+            <div style="text-align: center; min-height: 53.2px;">
+              <div id='addSerial' style="display: inline-block;"><img class='imgSerials' src='images/AddOne.png' width='30px' height='30px'></div>
+              <div id='deleteSerial' style="display: inline-block;"><img class='imgSerials' src='images/DeleteMe.png' width='30px' height='30px'></div>
+            </div>
+          </div>
+        </div>
+
+
+        <div style="margin-top: 15px;">
+          <!--<h2></h2>-->
+          <p style="text-align: center;">
+            <input type="button" id="setCancel" class="pAbutton" value="Cancel" onclick="closeSoftControl();" style="width: 100px;">
+            <input type="button" id="setSubmit" class="pAbuttonGrn" value="Save" onclick="saveSoftControl();" style="width: 100px;">
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>  
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+<!--        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" /> -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, width=device-width, viewport-fit=cover" />
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready data:; img-src * 'self' data:; style-src * 'unsafe-inline'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; " />
+<!--        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'"/>  -->
+        <title>invCount</title>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script src="cordova.js"></script>
+        <script src="js/jquery-3.7.1.min.js"></script>
+        <script src="js/jquery-migrate-1.4.1.js"></script>
+        <script type="text/javascript" src="js/jquery.touchSwipe.min.js"></script>
+        <script src="js/index.js"></script>
+<!--        <script src="http://192.168.86.250:8080/target/target-script-min.js#anonymous"></script>  -->
+<!--        <script>
+            $( document ).bind( "mobileinit", function() {
+              // Make your jQuery Mobile framework configuration changes here!
+              $.support.cors = true;
+              $.mobile.allowCrossDomainPages = true;
+            });
+        </script>
+-->
+        <script>
+            function onLoad() {
+                document.addEventListener("deviceready", countInit, false);
+            }
+        </script>
+    </head>
+
+    <body onload="onLoad()">
+      <div class="container">
+      <div class="logo">
+        <img id="ourLogo" src="./img/pA_250.png" height="42" width="175" alt="" /> 
+        <img id="settingsIcon" src="./img/settings.png" height="24" width="24" onclick="goToSettings()" alt="" />
+        <img id="closeSettingsIcon" src="./img/closeSet.png" height="24" width="24" onclick="settingSave()" style="display: none;" alt="" />
+      </div>
+
+      <div id="countDiv">
+        <div>
+          <p><button id="cancel" onclick="clearResults()">Cancel</button></p>
+          <p><button id="submit" onclick="postCount()">Submit</button></p>
+        
+          <p id="browsePara">
+            <img id="leftBrowse" src="./img/arrow_lD.png" height="32" width="32" alt="" />
+            <span id="invCountTitle">Inventory Count</span><br>
+            <span id="recNbrDisplay">0 / 0</span>
+            <img id="rightBrowse" src="./img/arrow_rD.png" height="32" width="32" alt="" />
+          </p>
+        </div>
+
+        <div class="entryDiv">
+          <p id="manCodePara" style="display: none;">
+            <br>
+            <label for='manCode' class='fieldLabelFree'>Item Code:&nbsp;</label>
+            <input type='text' id='manCode' name='manCode' maxlength='14' />
+          </p>
+
+          <p id="getQtyPara" style="display: none;">
+            <label for='getQty' class='fieldLabelFree'>Qty:&nbsp;</label>
+            <input type='number' id='getQty' name='getQty' />
+          </p>
+
+          <div id="results"></div>
+          <div id="wait_p"><img src="./img/spinner.gif" height="128" width="128" alt="" /></div>
+
+        </div>
+    </div>
+
+        <div class="scanBtns">
+            <button class="scanButton" id="scanBtnL" onclick="startScan()"><img src="./img/scanner.png" height="32" width="32" alt="" /></button>
+            <button class="scanButton" id="typeBtn" onclick="typeCode()"><img src="./img/keyboard.png" height="32" width="32" alt="" /></button>
+            <button class="scanButton" id="scanBtnR" onclick="startScan()"><img src="./img/scanner.png" height="32" width="32" alt="" /></button>
+        </div>
+
+<!-- SETTINGS -->
+      <div id="settingsDiv">
+        <div id="setIPaddr" class="setting">
+          <p>
+            <span class='fieldLabelFree'>App Version: </span><span id='appVersion'></span>
+          </p>
+          <p>
+            <label for='getIPaddr' class='fieldLabelFree'>Server Address:</label>
+            <br>
+            <input type='URL' id='getIPaddr' name='getIPaddr' onchange="ipImageX();" />
+            <img id="ipFeedback" src="./img/x24.png" height="24" width="24" alt=""/>
+            <br>
+            <br>
+            <button id="testIpButton" onclick="testIpEntered()">Test</button>
+            <img id="testIpSpin" src="./img/spinSmall.gif" height="30" width="30" alt="" />
+            <br>
+          </p>
+          <p id="userInfoPara">
+            <span id="userInfoLabel" class='fieldLabelFree'>User Info</span>
+            <hr>
+            <span id="userNameLabel">You are logged in as:&nbsp;</span><span id="userNameSpan"></span>
+            <br>
+            <button id="loginoutButton" onclick="logout()">Logout</button>
+          </p>
+        </div>
+<!--          
+        <div id="setButtons">
+          <p style="text-align: center;"><button id="setClose" style="display: block;" onclick="settingSave();">Close</button></p>
+          <p><button id="setCancel" style="display: block;" onclick="backToMain()" disabled>Cancel</button></p>
+          <p><button id="setSubmit" style="display: block;" onclick="settingSave()" disabled>Save</button></p>
+        </div>
+-->
+      </div>
+
+<!-- LOGIN -->
+      <div id="loginDiv">
+        <div id="enterCred" class="entryDiv">
+          <p>
+            <label for='userID' class='fieldLabelFree'>User Name:</label>
+            <br>
+            <input type='text' id='userID' name='userID' />
+            <br>
+            <br>
+            <label for='pswd' class='fieldLabelFree'>Password:</label>
+            <br>
+            <input type='password' id='pswd' name='pswd' />
+            <br>
+            <input type="checkbox" id="togglePswd" onchange="togglePswd(this)"/>
+            <label for='togglePswd' class='fieldLabelFree'>Show Password</label>
+            <br>
+            <br>
+            <button id="sendCredButton" onclick="sendLogin()">Login</button>
+          </p>
+        </div>
+      </div>
+    </div>
+    </body>
+</html>

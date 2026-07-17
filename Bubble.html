@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 UTC">
+        <title>encorePOS Dashboard</title>
+        <link rel="stylesheet" type="text/css" href="css/datatables.min.css"/>
+
+        <script src="js/jquery-1.12.3.min.js"></script> 
+        <script src="js/datatables.min.js"></script>
+        <script src="js/vfs_fonts.js"></script>
+    </head>
+
+<body>
+    <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+var editor; // use a global for the submit and return data rendering in the examples
+ 
+$(document).ready(function() {
+    editor = new $.fn.dataTable.Editor( {
+        ajax: "staff?",
+        table: "#example",
+        fields: [ {
+                label: "Salary:",
+                name: "salary"
+            }
+        ]
+    } );
+ 
+    // Activate the bubble editor on click of a table cell
+    $('#example').on( 'click', 'tbody td:nth-child(7)', function (e) {
+        editor.bubble( this );
+    } );
+
+    $('#example').DataTable( {
+        dom: "Bfrtip",
+        scrollY: 300,
+        paging: false,
+        ajax: "staff?",
+        columns: [
+            {
+                data: null,
+                defaultContent: '',
+                className: 'select-checkbox',
+                orderable: false
+            },
+            { data: "first_name" },
+            { data: "last_name" },
+            { data: "position" },
+            { data: "office" },
+            { data: "start_date" },
+            { data: "salary", render: $.fn.dataTable.render.number( ',', '.', 0, '$' ) }
+        ],
+        order: [ 1, 'asc' ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+} );
+</script>
+</body>
