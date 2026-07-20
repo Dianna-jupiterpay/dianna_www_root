@@ -1,0 +1,39 @@
+#popSalesHistory,
+#popPurchHistory,
+#popCustSalesHistory,
+#popVendPurchHistory,
+#Modal_TaxEx_Content.fqmodal-content,
+.ui-widget-overlay, #Modal_Coup_Content .fqmodal-content, #Modal_DailySumm_Content  .fqmodal-content,
+#Modal_DOH_Content .fqmodal-content, #Modal_Clock_Content.fq-modal-content,
+#Modal_Disc_Content.fqmodal-content, #modalInfoContent .modal-content, #Modal_vendList_Content .modal-content,
+#Modal_Promo_Content.fqmodal-content, #Modal_Disc_Content .fqmodal-content, #Modal_INVX_Content.fqmodal-content,
+#Modal_GenericReport_Content.fqmodal-content ,  #Modal_TaxEx_Body.fqmodal-content, #Modal_Disc_Body.fqmodal-content, #Modal_Coup_Body .fqmodal-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+
+
+.ui-dialog .ui-dialog-titlebar-close::before {
+    content: "close";
+    font-family: "Material Symbols Outlined";
+    font-size: 24px;
+    line-height: 1;
+}
+
+/* Replaced Material Symbol */
+.ui-dialog .ui-dialog-titlebar-close::before {
+    content: "close";
+    font-family: "Material Symbols Outlined";
+    font-size: 24px;
+}
+
+/* Center the icon */
+.ui-dialog .ui-dialog-titlebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+}
+

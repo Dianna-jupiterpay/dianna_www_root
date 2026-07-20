@@ -1,0 +1,2568 @@
+/*==========================================================================*\
+|| ######################################################################## ||
+|| # encorePOS 1.3.100.102                                                # ||
+|| # lists.css                                                              # ||
+|| # -------------------------------------------------------------------- # ||
+|| # Copyright ©2016-2026 Jupiter Software, LLC  All Rights Reserved.     # ||
+|| # This file may not be redistributed in whole or significant part.     # ||
+|| # ------------------ encorePOS IS NOT FREE SOFTWARE ------------------ # ||
+|| # http://www.getproofpos.com | http://www.getproofpos.com/legal        # ||
+|| ######################################################################## ||
+\*==========================================================================*/
+
+/*
+ *  TABLE OF CONTENTS
+ *  ─────────────────────────────────────────────────────────────────────────
+ *   1.  JS-GRID LIST MODALS   — z-index, content, body, title bars
+ *   2.  JSGRID — globals, header, body rows, hover, cells, selected, search
+ *   3.  SCROLLBARS            — jsgrid webkit + firefox
+ *   4.  EXTERNAL PAGER        — floated page-number nav buttons
+ *   5.  LIST TOOLBAR          — Search / Add / Clear / Import buttons
+ *   6.  SMALL LIST MODAL      — Sizes, Types, Depts, Pools, Profiles, etc.
+ *   7.  DETAIL MODALS         — Item / Customer / Vendor / Employee
+ *   8.  POP TABLE LAYOUT      — .popBox / .popTable / flex columns
+ *   9.  POP DATA CELLS        — bordered input/select containers
+ *  10.  POP BUTTONS           — Save / Cancel / Delete / Edit / Go
+ *  11.  EMPLOYEE GRID ROWS    — CSS Grid rows (Security / Detail tabs)
+ *  12.  VEX F7 INPUTS         — barcode / lookup dialog inputs
+ *  13.  TIME CLOCK            — inside Employee pop
+ *  14.  STANDALONE ACTION BUTTONS
+ *  15.  DATATABLES EXPORT DROPDOWN
+ *  16.  COLVIS PANEL
+ *  17.  RESPONSIVE
+ *  ─────────────────────────────────────────────────────────────────────────
+ *  Settings-screen rules live in settings-external.css (loaded after this).
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1.  JS-GRID LIST MODALS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Modal z-index ── */
+#modaljsItemList,
+#modaljsCustList,
+#modaljsEmplList,
+#modaljsVendList {
+    z-index: 99998;
+}
+
+/* ── Modal content panel ── */
+#modaljsItemList_Content,
+#modaljsCustList_Content,
+#modaljsEmplList_Content,
+#modaljsVendList_Content {
+    color: var(--clr-thead-legacy);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* width: 95%;
+    height: calc(100% - 40px);
+    top: 5px; */
+}
+
+#modalPopItemContent,
+#modalPopCustContent,
+#modalPopVendContent,
+#modalPopEmplContent {
+    display: flex;
+    align-items: flex-start;    /* ← change from center to flex-start so tall content isn't clipped */
+    min-height: 90%;
+    justify-content: center;
+    overflow-y: auto;           /* ← add this */
+    padding: 16px 0;            /* ← breathing room top/bottom */
+}
+/* #modalPopItemContent, #modalPopCustContent, #modalPopVendContent, #modalPopEmplContent {
+    width: 95%;
+    height: 95%;
+} */
+/* ── Modal body ── */
+#modaljsCustList_Body,
+#modaljsItemList_Body,
+#modaljsEmplList_Body,
+#modaljsVendList_Body {
+    min-height: 90%;
+    width: calc(80vw - var(--sidebar-collapsed-width));
+    overflow-y: auto;
+    background-color: var(--clr-sidebar-bg);
+    padding: 1em;
+    max-width: 1200px;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 14px 0 rgba(0,0,0,0.19) !important;
+}
+
+#modaljsCustList_Body {
+    position: relative;
+}
+
+/* ── Table div containers ── */
+#modaljsCustList_Content  .except-modal-content,
+#modaljsEmplList_Content  .except-modal-content,
+#modaljsVendList_Content  .except-modal-content,
+#modaljsItemList_Content  .except-modal-content {
+    display: flex;
+    align-items: center;
+}
+
+/* ── Title bar (toolbar wrapper) ── */
+.listToolbar {
+    max-width: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.listToolbarLeft,
+.listToolbarRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Title bars (ID-scoped) ── */
+#jsCustListTitleBar,
+#jsItemListTitleBar,
+#jsEmplListTitleBar,
+#jsVendListTitleBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    height: 44px;
+    min-height: 44px;
+    border-bottom: 1px solid var(--clr-border-element);
+    box-sizing: border-box;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#itemListTitleBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 14px;
+    background-color: var(--clr-bg-inv);
+    border-bottom: 1px solid var(--clr-border-element);
+    box-sizing: border-box;
+}
+
+/* ── Title text ── */
+#jsCustListTitle,
+#jsItemListTitle,
+#jsEmplListTitle,
+#jsVendListTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--clr-menu-active);
+    line-height: 44px;
+}
+
+#itemListTitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--clr-menu-active);
+    line-height: 44px;
+    position: static !important;
+    top: auto !important;
+}
+
+/* ── Close buttons ── */
+#jsCustListClose,
+#jsItemListClose,
+#jsEmplListClose,
+#jsVendListClose,
+#itemListClose {
+    display: flex;
+    align-items: center;
+    line-height: 44px;
+}
+
+/* ── DataTables wrapper backgrounds ── */
+#jsItemListTable_wrapper,
+#jsCustListTable_wrapper,
+#jsEmplListTable_wrapper,
+#jsVendListTable_wrapper {
+    background-color: #fdfae8;
+    padding: 5px;
+}
+
+#jsItemListTable_wrapper {
+    padding: 10px;
+    width: 85%;
+    /* color: #1f6b93 !important; */
+}
+
+/* ── Table font size ── */
+#jsItemListTable,
+#jsCustListTable,
+#jsEmplListTable,
+#jsVendListTable,
+#jsItemListTable_wrapper {
+    font-size: 12px;
+}
+
+
+
+
+/* ── DataTables info / filter / length / paginate ── */
+#jsItemListTable_info,
+#jsCustListTable_info,
+#jsEmplListTable_info,
+#jsVendListTable_info {
+    padding-bottom: 4px;
+    padding-right: 10px;
+}
+
+#jsItemListTable_filter,
+#jsCustListTable_filter,
+#jsEmplListTable_filter,
+#jsVendListTable_filter {
+    padding-bottom: 4px;
+}
+
+#jsItemListTable_info,
+#jsCustListTable_info,
+#jsEmplListTable_info,
+#jsVendListTable_info,
+#jsItemListTable_filter label,
+#jsCustListTable_filter label,
+#jsEmplListTable_filter label,
+#jsVendListTable_filter label,
+#jsItemListTable_length,
+#jsCustListTable_length,
+#jsEmplListTable_length,
+#jsVendListTable_length,
+#jsItemListTable_paginate,
+#jsCustListTable_paginate,
+#jsEmplListTable_paginate,
+#jsVendListTable_paginate {
+    font-size: 14px;
+}
+
+/* ── Table body side borders ── */
+#jsItemListTableBody,
+#jsCustListTableBody,
+#jsEmplListTableBody,
+#jsVendListTableBody {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+/* ── Header row th borders ── */
+#jsCustListTableDiv tr.jsgrid-header-row th,
+#jsItemListTableDiv tr.jsgrid-header-row th,
+#jsEmplListTableDiv tr.jsgrid-header-row th,
+#jsVendListTableDiv tr.jsgrid-header-row th {
+    border: 1px solid #C7C7C7;
+}
+
+/* ── Highlight rows / search spans ── */
+#jsItemListTable tbody tr.highlight,
+#jsCustListTable tbody tr.highlight,
+#jsEmplListTable tbody tr.highlight,
+#jsVendListTable tbody tr.highlight,
+#jsItemListTable tbody tr.highlight > .sorting_1,
+#jsCustListTable tbody tr.highlight > .sorting_1,
+#jsEmplListTable tbody tr.highlight > .sorting_1,
+#jsVendListTable tbody tr.highlight > .sorting_1 {
+    background-color: rgb(201,219,246) !important;
+}
+
+/* 
+#jsItemListTable_wrapper, 
+#jsCustListTable_wrapper, 
+#jsEmplListTable_wrapper, 
+#jsVendListTable_wrapper {
+    padding: 5px;
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+}     */
+
+#jsItemListTable tbody span.highlight,
+#jsCustListTable tbody span.highlight,
+#jsEmplListTable tbody span.highlight,
+#jsVendListTable tbody span.highlight {
+    background-color: rgb(0,0,0) !important;
+}
+
+/* ── Table div containers — height / overflow ── */
+#jsItemListTableDiv,
+#jsCustListTableDiv,
+#jsEmplListTableDiv,
+#jsVendListTableDiv {
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+    margin-top: 0 !important;
+    /* padding: 0px; */
+}
+
+#jsItemListTableDiv {
+    overflow-y: scroll;
+}
+
+/* ── jsgrid outer container ── */
+#jsItemListTableDiv .jsgrid,
+#jsCustListTableDiv .jsgrid,
+#jsEmplListTableDiv .jsgrid,
+#jsVendListTableDiv .jsgrid {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #C7C7C7;
+    width: 100% !important;
+}
+
+/* ── Corner radii on first/last header cells ── */
+#jsItemListTableDiv .jsgrid-header-row th:first-child,
+#jsCustListTableDiv .jsgrid-header-row th:first-child,
+#jsEmplListTableDiv .jsgrid-header-row th:first-child,
+#jsVendListTableDiv .jsgrid-header-row th:first-child {
+    border-top-left-radius: 8px;
+}
+
+#jsItemListTableDiv .jsgrid-header-row th:last-child,
+#jsCustListTableDiv .jsgrid-header-row th:last-child,
+#jsEmplListTableDiv .jsgrid-header-row th:last-child,
+#jsVendListTableDiv .jsgrid-header-row th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* ── Remove outer borders on grid header/body ── */
+#jsItemListTableDiv .jsgrid-grid-header,
+#jsCustListTableDiv .jsgrid-grid-header,
+#jsEmplListTableDiv .jsgrid-grid-header,
+#jsVendListTableDiv .jsgrid-grid-header,
+#jsItemListTableDiv .jsgrid-grid-body,
+#jsCustListTableDiv .jsgrid-grid-body,
+#jsEmplListTableDiv .jsgrid-grid-body,
+#jsVendListTableDiv .jsgrid-grid-body {
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    border-top: none !important;
+}
+
+/* ── ID-scoped cells: overflow ── */
+#jsItemListTableDiv .jsgrid-cell,
+#jsCustListTableDiv .jsgrid-cell,
+#jsEmplListTableDiv .jsgrid-cell,
+#jsVendListTableDiv .jsgrid-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── ID-scoped header cell override ── */
+#jsItemListTableDiv .jsgrid-header-row > .jsgrid-header-cell,
+#jsCustListTableDiv .jsgrid-header-row > .jsgrid-header-cell,
+#jsEmplListTableDiv .jsgrid-header-row > .jsgrid-header-cell,
+#jsVendListTableDiv .jsgrid-header-row > .jsgrid-header-cell {
+    background: var(--clr-thead-legacy) !important;
+    color: var(--clr-thead-text) !important;
+}
+
+/* ── Header cells ── */
+.jsgrid-header-row > .jsgrid-header-cell {
+    font-size: 12px;
+    background: var(--clr-thead-legacy) !important;
+    color: var(--clr-thead-text) !important;
+    font-weight: bold;
+    padding: 8px 10px;
+    white-space: nowrap;
+    border-right: 1px solid #C7C7C7;
+}
+
+
+/* ── ID-scoped row hover ── */
+#jsItemListTableDiv .jsgrid-row:hover > .jsgrid-cell,
+#jsCustListTableDiv .jsgrid-row:hover > .jsgrid-cell,
+#jsEmplListTableDiv .jsgrid-row:hover > .jsgrid-cell,
+#jsVendListTableDiv .jsgrid-row:hover > .jsgrid-cell,
+#jsItemListTableDiv .jsgrid-alt-row:hover > .jsgrid-cell,
+#jsCustListTableDiv .jsgrid-alt-row:hover > .jsgrid-cell,
+#jsEmplListTableDiv .jsgrid-alt-row:hover > .jsgrid-cell,
+#jsVendListTableDiv .jsgrid-alt-row:hover > .jsgrid-cell {
+    background: var(--clr-row-hover) !important;
+    cursor: pointer;
+}
+
+/* ── Customer list placement ── */
+#jsCustListAdd,
+#jsCustListSearch {
+    position: absolute;
+    top: 58px;
+    z-index: 5;
+}
+
+#jsCustListAdd    { right: 150px; }
+#jsCustListSearch { right: 24px; }
+
+#jsCustListTableDiv { margin-top: 52px; }
+
+/* ── Add button labels ── */
+#itemAdd::after  { content: "Add New Item"; }
+#custAdd::after  { content: "Add Customer"; }
+#emplAdd::after  { content: "Add Employee"; }
+#vendAdd::after  { content: "Add Vendor"; }
+
+/* #popDividerLeft { display: flex; } */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2.  JSGRID — globals
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.jsgrid { font-size: 12px !important; }
+
+.jsgrid-grid-header,
+.jsgrid-grid-body {
+    overflow-x: hidden !important;
+}
+
+.jsgrid-grid-header table,
+.jsgrid-grid-body table {
+    width: 100% !important;
+    table-layout: fixed;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.jsgrid-grid-body {
+    height: calc(100% - 40px) !important;
+    scrollbar-color: #433B3B #f4f6f9;
+}
+
+.jsgrid-grid-header {
+    scrollbar-color: #433B3B #f4f6f9;
+}
+
+/* ── Body rows ── */
+.jsgrid-row     > .jsgrid-cell { background: #ffffff; }
+.jsgrid-alt-row > .jsgrid-cell { background: #f5f7fa; }
+
+/* ── Global row hover (fallback) ── */
+.jsgrid-row:hover     > .jsgrid-cell,
+.jsgrid-alt-row:hover > .jsgrid-cell {
+    background: var(--clr-row-hover);
+    cursor: pointer;
+}
+
+/* ── Cells ── */
+.jsgrid-cell,
+.jsgrid-header-cell {
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jsgrid-cell {
+    padding: 10px 12px;
+    border-bottom: 1px solid #edf0f4;
+    vertical-align: middle;
+    font-size: 12px;
+    color: #333;
+}
+
+/* ── Selected row ── */
+.jsgrid-selected-row,
+.jsgrid-selected-row > .jsgrid-cell,
+.highlighted {
+    background: var(--clr-row-hover) !important;
+    background-color: var(--clr-row-hover) !important;
+    border-color: var(--clr-row-hover) !important;
+}
+
+/* ── Search / filter row ── */
+.searchCell { background: var(--clr-menu-active); }
+
+.searchCell input {
+    text-transform: uppercase;
+    border-radius: 4px;
+    border: 1px solid #d3dbe7;
+    padding: 4px 8px;
+    font-size: 12px;
+    width: 90%;
+    color: #333;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.  SCROLLBARS  (jsgrid)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.jsgrid-grid-body::-webkit-scrollbar,
+.jsgrid-grid-header::-webkit-scrollbar    { width: 6px; height: 6px; }
+
+.jsgrid-grid-body::-webkit-scrollbar-track,
+.jsgrid-grid-header::-webkit-scrollbar-track { background: #f4f6f9; }
+
+.jsgrid-grid-body::-webkit-scrollbar-thumb,
+.jsgrid-grid-header::-webkit-scrollbar-thumb {
+    background: #c5ccd7;
+    border-radius: 4px;
+}
+
+.jsgrid-grid-body::-webkit-scrollbar-thumb:hover,
+.jsgrid-grid-header::-webkit-scrollbar-thumb:hover { background: #93a0b1; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4.  EXTERNAL PAGER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.external-pager,
+.listAdd,
+.listSearch {
+    float: none !important;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 0 !important;
+    
+}
+
+.listSearch{
+      text-align: right;
+}
+/* .external-pager {
+    float: right;
+    height: 32px;
+    text-align: left;
+    position: relative;
+    top: -15px;
+} */
+
+.external-pager .jsgrid-pager-nav-button,
+.external-pager .jsgrid-pager-nav-inactive-button {
+    height: 28px !important;
+    min-width: 48px !important;
+    padding: 0 10px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px !important;
+    border: 1px solid #C7C7C7 !important;
+    background-color: #ffffff !important;
+    color: #374151 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+.external-pager .jsgrid-pager-nav-button:hover {
+    border-color: #007BFF !important;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.15) !important;
+}
+
+.external-pager .jsgrid-pager-nav-inactive-button {
+    opacity: 0.45;
+    cursor: default !important;
+}
+
+.pagerMaterialIcon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    color: #374151 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5.  LIST TOOLBAR  — Search / Add / Clear / Import buttons
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.listSearch,
+.listAdd,
+.listImport { 
+    display: inline-block; 
+    text-align: center;
+}
+
+/* ── Shared toolbar button base ── */
+.listAddButton,
+.searchButton,
+.clearSearch,
+.listImportButton {
+    height: 28px !important;
+     text-align: center;
+    min-width: 110px;
+    padding: 0 10px !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 6px !important;
+    border: 1px solid #C7C7C7 !important;
+    background-color: #ffffff !important;
+    color: #374151 !important;
+    font-family: var(--font-base);
+    font-size: 13px !important;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease,
+                background-color 0.15s ease, color 0.15s ease !important;
+}
+
+.searchButton,
+.listAddButton,
+.listImportButton,
+.clearSearch { display: inline-flex;  text-decoration: none;}
+
+/* ── Hover / focus / active ── */
+.listAddButton:hover,  .listAddButton:focus,
+.searchButton:hover,   .searchButton:focus,
+.clearSearch:hover,    .clearSearch:focus,
+.listImportButton:hover, .listImportButton:focus,
+.searchButton.searchTerm,
+.clearSearch.searchTerm {
+    border-color: #007BFF !important;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.15) !important;
+}
+
+/* ── Icons (Material Symbols) ── */
+.listAddButton::before {
+    font-family: 'Material Symbols Outlined';
+    content: "groups";
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    background: none !important;
+    width: auto !important; height: auto !important;
+    margin: 0 !important; position: static !important;
+}
+
+.searchButton::before {
+    font-family: 'Material Symbols Outlined';
+    content: "search";
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    background: none !important;
+    width: auto !important; height: auto !important;
+    margin: 0 !important; position: static !important;
+}
+
+.clearSearch::before {
+    font-family: 'Material Symbols Outlined';
+    content: "search_off";
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1;
+    background: none !important;
+    width: auto !important; height: auto !important;
+    margin: 0 !important; position: static !important;
+}
+
+/* ── Labels ── */
+.searchButton::after { content: "Search"; }
+.clearSearch::after  { content: "Search Off"; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6.  SMALL LIST MODAL  (Sizes, Types, Departments, Discount Pools, Profiles)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ── */
+.modalSmallList,
+.modalProfileList {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    background-color: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    font-family: 'Inter', sans-serif;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Center wrapper ── */
+.modalSmallListContent,
+.modalProfileListContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── Dialog box ── */
+.modalSmallListBody,
+.modalProfileListBody {
+    display: flex;
+    flex-direction: column;
+    width: min(700px, calc(100vw - 40px));
+    max-height: calc(100vh - 80px);
+    background-color: var(--clr-sidebar-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.12);
+    position: relative;
+    left: calc(var(--sidebar-collapsed-width) / 2);
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Title bar ── */
+.smallListTitleBar,
+.profileListTitleBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    height: 52px;
+    min-height: 52px;
+    padding: 0 20px;
+    background-color: var(--clr-sidebar-bg);
+    border-bottom: 1px solid var(--clr-border-element);
+    box-sizing: border-box;
+}
+
+.smallListTitleBarBlockLeft,
+.profileListTitleBarBlockLeft {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--clr-text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+}
+
+.smallListTitleBarBlockRight,
+.profileListTitleBarBlockRight {
+    display: flex;
+    align-items: center;
+}
+
+.smallListTitleBarBlockRight .close,
+.profileListTitleBarBlockRight .close {
+    font-size: 22px;
+    font-weight: 300;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+    text-decoration: none;
+}
+
+.smallListTitleBarBlockRight .close:hover,
+.profileListTitleBarBlockRight .close:hover {
+    color: var(--clr-text);
+    background: var(--clr-menu-hover);
+}
+
+/* ── Body container ── */
+.smallListContainer,
+.profileListContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    overflow: hidden;
+    min-height: 0;
+    padding: 1em;
+    gap: 1em;
+    background-color: var(--clr-sidebar-bg);
+}
+
+/* ── Scrollable table area ── */
+.smallListTableWrapper,
+.profileListTableWrapper {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 14px 0 rgba(0,0,0,0.19);
+    scrollbar-color: #c5ccd7 #f4f6f9;
+    scrollbar-width: thin;
+}
+
+.smallListTableWrapper::-webkit-scrollbar,
+.profileListTableWrapper::-webkit-scrollbar { width: 6px; }
+
+.smallListTableWrapper::-webkit-scrollbar-track,
+.profileListTableWrapper::-webkit-scrollbar-track { background: #f4f6f9; }
+
+.smallListTableWrapper::-webkit-scrollbar-thumb,
+.profileListTableWrapper::-webkit-scrollbar-thumb { background: #c5ccd7; border-radius: 4px; }
+
+/* ── Table ── */
+.smallListTable,
+.profileListTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: var(--clr-text, #333);
+}
+
+.smallListTable thead,
+.profileListTable thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.smallListTable thead th,
+.profileListTable thead th {
+    background-color: var(--clr-thead-legacy);
+    color: var(--clr-thead-text);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.smallListTable tbody td,
+.profileListTable tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--clr-border, #edf0f4);
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--clr-text);
+}
+
+.smallListTable tbody tr:hover td,
+.profileListTable tbody tr:hover td {
+    background-color: var(--clr-row-hover) !important;
+}
+
+.smallListTableSelected,
+.profileListTable tbody tr.selected td {
+    background-color: var(--clr-menu-active-bg) !important;
+    color: var(--clr-menu-active) !important;
+    font-weight: 500;
+}
+
+/* ── Hidden columns / alignment helpers ── */
+.smallListTableHiddenColumn,
+.smallListHdrCellHidden,
+.smallListDataCellHidden,
+.profileListTableHiddenColumn { display: none; }
+
+.smallListHdrCellCenter,
+.smallListDataCellCenter  { text-align: center !important; }
+.smallListHdrCellLeft     {  padding-left: 5px; }
+.smallListDataCellRight   { text-align: right !important; }
+
+/* ── Action bar ── */
+.smallListButtonContainer,
+.profileListButtonContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 4px 0 0 0;
+}
+
+.smallListButtonContainer button,
+.profileListButtonContainer button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    min-width: 80px;
+    padding: 0 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--clr-border-element, #C7C7C7);
+    background-color: var(--clr-sidebar-bg);
+    color: var(--clr-text, #374151);
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.smallListButtonContainer button:hover,
+.profileListButtonContainer button:hover {
+    border-color: var(--clr-menu-active);
+    box-shadow: 0 0 0 2px var(--clr-menu-active-bg);
+    color: var(--clr-menu-active);
+}
+
+.smallListButtonContainer button:disabled,
+.profileListButtonContainer button:disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+}
+
+
+
+.smallListDialog .ui-dialog-buttonpane {
+    padding: 10px;
+}
+
+.smallListDialog .ui-dialog-content {
+    padding: 15px;
+}
+.ui-dialog {
+    border-radius: 8px;
+}
+.ui-dialog-buttonpane {
+    border-top: none;
+}
+
+
+
+/* ── jQuery UI Add/Edit dialog ── */
+div[aria-describedby="smallListDialog"] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    background-color: var(--clr-sidebar-bg) !important;
+    border: 1px solid var(--clr-border-element) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.12) !important;
+    font-family: 'Inter', sans-serif !important;
+    color: var(--clr-text, #333);
+    overflow: hidden !important;
+    z-index: 100002 !important;
+    max-width: 500px;
+    padding: 0 !important;
+}
+
+div[aria-describedby="smallListDialog"] .ui-dialog-titlebar {
+    background-color: var(--clr-sidebar-bg) !important;
+    border-bottom: 1px solid var(--clr-border-element) !important;
+    border-radius: 0 !important;
+    color: var(--clr-text) !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 14px 20px !important;
+    box-sizing: border-box;
+}
+
+div[aria-describedby="smallListDialog"] .ui-dialog-content {
+    padding: 20px !important;
+    background-color: var(--clr-sidebar-bg) !important;
+}
+
+div[aria-describedby="smallListDialog"] .ui-dialog-buttonpane {
+    padding: 12px 20px !important;
+    margin: 0 !important;
+}
+
+#smallListDialogBody {
+    color: var(--clr-text, #333);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+/* ── Confirm/message dialog ── */
+div[aria-describedby="smallListMsg"] {
+    position: fixed;
+    top: 50%;
+    left: 50% ;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    border: 1px solid var(--clr-border-element);
+    border-radius: 12px;
+    background-color: var(--clr-sidebar-bg);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    z-index: 100003 ;
+    overflow: hidden;
+    padding: 12px;
+}
+
+#smallListMsg ~ div button {
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+}
+
+#smallListMsg ~ div button:hover {
+    background-color: var(--clr-menu-hover);
+}
+
+#smallListSubmit:hover,
+#smallListCancel:hover {
+    border-color: var(--clr-menu-active) !important;
+    color: var(--clr-menu-active) !important;
+}
+
+/* ── Dialog form fields ── */
+.smallListDialogLabel {
+    display: inline-block;
+    width: 140px;
+    text-align: right;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--clr-text-muted);
+}
+
+.smallListDialogInput {
+    display: inline-block;
+    margin-left: 12px;
+    height: 28px;
+    border: 1px solid var(--clr-border-strong, #d1d5db);
+    border-radius: 6px;
+    background-color: var(--clr-sidebar-bg);
+    padding: 0 10px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    color: var(--clr-text);
+}
+
+.smallListDialogInput:focus,
+.smallListDialogDateInput:focus,
+.smallListDialogSelect:focus,
+.smallListDialogSelectLge:focus {
+    outline: none;
+    border-color: var(--clr-menu-active);
+    box-shadow: 0 0 0 2px var(--clr-menu-active-bg);
+}
+
+.smallListDialogSelect {
+    display: inline-block;
+    margin-left: 12px;
+    height: 28px;
+    width: 200px;
+    border: 1px solid var(--clr-border-strong, #d1d5db);
+    border-radius: 6px;
+    background-color: var(--clr-sidebar-bg);
+    padding: 0 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    color: var(--clr-text);
+}
+
+.smallListDialogSelectLge {
+    display: inline-block;
+    margin-left: 12px;
+    height: 28px;
+    width: 200px;
+    border: 1px solid var(--clr-border-strong, #d1d5db);
+    border-radius: 6px;
+    background-color: var(--clr-sidebar-bg);
+    padding: 0 10px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    color: var(--clr-text);
+}
+
+.smallListDialogDateInput {
+    display: inline-block;
+    margin-left: 12px;
+    /* width: 200px; */
+    height: 28px;
+    color: var(--clr-text);
+    border: 1px solid var(--clr-border-strong, #d1d5db);
+    border-radius: 6px;
+    background-color: var(--clr-sidebar-bg);
+    padding: 0 10px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+}
+
+.smallListDialogFieldset {
+    border: 1px solid var(--clr-border, #e5e7eb);
+    padding: 12px 16px;
+    margin: 16px 0;
+    line-height: 2;
+    border-radius: 8px;
+}
+
+.smallListDialogFieldset legend {
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--clr-text-muted);
+    padding: 0 6px;
+}
+
+.smallListDialogRadio {
+    height: 16px;
+    width: 16px;
+    accent-color: var(--clr-menu-active);
+    position: relative;
+    top: 3px;
+    margin: 8px 5px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7.  DETAIL MODALS  —  Item / Customer / Vendor / Employee
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#modalPopItem,
+#modalPopCust,
+#modalPopVend,
+#modalPopEmpl { z-index: 100000; }
+
+#modalPopItemContent,
+#modalPopCustContent,
+#modalPopVendContent,
+#modalPopEmplContent { margin: 0 auto; }
+
+/* ── Title bars ── */
+#popItemTitleBar,
+#popCustTitleBar,
+#popVendTitleBar,
+#popEmplTitleBar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    color: var(--clr-menu-active);
+}
+
+/* ── Modal body backgrounds ── */
+#modalPopItemBody,
+#modalPopCustBody,
+#modalPopVendBody,
+#modalPopEmplBody {
+    background-color: var(--clr-sidebar-bg);
+    overflow-x: hidden;
+    width: 90%;
+    min-height: 90%;
+    max-height: 94vh;   
+    box-shadow: 0 4px 5px 3px rgba(0,0,0,0.2);
+    box-sizing: border-box;     /* ← add this */
+}
+#modalPopItemBody{
+    max-width: 1200px;
+}
+#modalPopCustBody {
+    width: 95% !important;
+    max-width: 1100px !important;
+}
+
+/* ── Tab containers ── */
+#popTabs,
+#popCustTabs,
+#popVendTabs,
+#popEmplTabs { border-radius: 4px; margin: 0 auto;}
+
+/* ── Tab panel content areas ── */
+#popContainer,
+#popCosts,
+#popPurchHistory,
+#popSalesHistory,
+#popCustContainer,
+#popCustSalesHistory,
+#popVendContainer,
+#popVendPurchHistory,
+#popEmplContainer {
+    background-color: var(--clr-sidebar-bg);
+    margin-bottom: 12px;
+    min-height: 300px;
+    border-radius: 10px;
+}
+#popContainer, #popCustContainer, #popVendContainer, #popEmplContainer {
+    display: inline-block;
+    width: 100%;
+
+}
+#popContainer {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 14px 0 rgba(0, 0, 0, 0.19);
+}
+
+/* ── Inactive tab styling ── */
+li[aria-controls="popContainer"][aria-selected="false"],
+li[aria-controls="popCosts"][aria-selected="false"],
+li[aria-controls="popSalesHistory"][aria-selected="false"],
+li[aria-controls="popPurchHistory"][aria-selected="false"],
+li[aria-controls="popCustContainer"][aria-selected="false"],
+li[aria-controls="popCustTaxPricing"][aria-selected="false"],
+li[aria-controls="popCustShipping"][aria-selected="false"],
+li[aria-controls="popCustSalesHistory"][aria-selected="false"],
+li[aria-controls="popVendContainer"][aria-selected="false"],
+li[aria-controls="popVendPurchHistory"][aria-selected="false"],
+li[aria-controls="popEmplContainer"][aria-selected="false"],
+li[aria-controls="popEmplSecurity"][aria-selected="false"],
+li[aria-controls="popEmplTimeClock"][aria-selected="false"] {
+    color: var(--clr-menu-active);
+    border: 1px solid #d1d5db !important;
+    background-color: var(--clr-sidebar-bg);
+    border-radius: 8px 8px 0 0;
+}
+
+/* ── Active tab styling ── */
+li[aria-controls="popContainer"][aria-selected="true"],
+li[aria-controls="popCosts"][aria-selected="true"],
+li[aria-controls="popSalesHistory"][aria-selected="true"],
+li[aria-controls="popPurchHistory"][aria-selected="true"],
+li[aria-controls="popCustContainer"][aria-selected="true"],
+li[aria-controls="popCustTaxPricing"][aria-selected="true"],
+li[aria-controls="popCustShipping"][aria-selected="true"],
+li[aria-controls="popCustSalesHistory"][aria-selected="true"],
+li[aria-controls="popVendContainer"][aria-selected="true"],
+li[aria-controls="popVendPurchHistory"][aria-selected="true"],
+li[aria-controls="popEmplContainer"][aria-selected="true"],
+li[aria-controls="popEmplSecurity"][aria-selected="true"],
+li[aria-controls="popEmplTimeClock"][aria-selected="true"] {
+    background-color: #454545;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid #454545;
+}
+
+/* ── Not-implemented placeholder panels ── */
+#popSalesHistory,
+#popPurchHistory,
+#popCustSalesHistory,
+#popVendPurchHistory {
+    font-style: italic;
+    min-height: 260px;
+    color: #6b7280;
+    border: 1px dashed #d1d5db;
+    border-radius: 0 8px 8px 8px;
+    background-color: rgba(243,244,246,0.8);
+    text-align: center;
+    padding: 24px;
+    width: 90%;
+    max-width: 1000px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8.  POP TABLE LAYOUT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.popBox {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: row;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 14px 0 rgba(0,0,0,0.19);
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* .popBox {
+    display: inline-block;
+    width: 100%;
+} */
+
+#popContainer .popBox { box-shadow: none; border-radius: 0; }
+
+#popCosts .popBox {
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 14px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 0 8px 8px 8px;
+}
+
+/* ── Customer modal popBox overrides ── */
+#modalPopCust .popBox {
+    width: 100% !important;
+    gap: 0 !important;
+    padding: 20px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 14px 0 rgba(0, 0, 0, 0.19);
+    align-items: stretch;
+    border-radius: 0 8px 8px 8px;
+}
+
+.popTable {
+    display: table;
+    border-spacing: 0 6px;
+    border-collapse: separate;
+}
+
+.popTableRow {
+    display: table-row;
+    border-radius: 4px;
+    width: 100%;
+    /* makes the spacing weight safely delete height: 30px; */
+}
+
+/* ── Label cells ── */
+.popTableCell,
+.popFullCell {
+    display: table-cell;
+    width: 22%;
+    font-size: 14px;
+    text-align: left;
+    padding: 4px 8px;
+    border: none;
+    font-weight: 550;
+    color: var(--clr-thead-bg);
+    vertical-align: middle;
+}
+
+.popTableCell1 {
+    display: table-cell;
+    width: 12%;
+    text-align: left;
+    color: var(--clr-thead-bg);
+    font-weight: 550;
+    vertical-align: middle;
+}
+
+.popTableCell2 {
+    display: table-cell;
+    width: 30%;
+    line-height: 30px;
+    text-align: left;
+    color: var(--clr-thead-bg);
+    vertical-align: middle;
+}
+
+.popTableCell3 {
+    display: table-cell;
+    text-align: left;
+    color: var(--clr-thead-bg);
+    vertical-align: middle;
+}
+
+.popHeaderCell {
+    width: 14% !important;
+    display: table-cell;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: left;
+    padding: 0 6px;
+    color: var(--clr-thead-bg);
+    font-weight: bold;
+}
+
+.popTaxPriceCell {
+    width: 14% !important;
+    display: table-cell;
+    line-height: 30px;
+    font-size: 14px;
+    text-align: left;
+    padding: 0 6px;
+    color: var(--clr-thead-bg);
+}
+
+.popFullCell        { width: 66% !important; }
+.popTableNarrowCell { width: 19.5%; }
+
+.popSubTitle {
+    text-align: left;
+    color: var(--clr-thead-bg);
+    font-size: 20px;
+    margin: 8px;
+}
+
+/* ── Alignment helpers ── */
+.popRightAligned  { text-align: right !important; }
+
+/* ── Check if regular CenterAligned is used in the application. ── */
+.popCenterAligned { text-align: center; width: 100%; }
+#popCustTaxPriceTable .popCenterAligned { text-align: left;  }
+.popTopAligned    { vertical-align: top; padding-top: 4px; }
+
+/* ── Flex column helpers ── */
+#popLeft,
+#popVendLeft,
+.popCustLeft,
+#popLeft2,
+#popRight2,
+#popRight,
+#popVendRight {
+    flex: 1 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#popLeft,
+#popLeft2,
+#popVendLeft,
+.popCustLeft {
+    flex: 1 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-right: 24px;
+    border-right: 1px solid var(--clr-border-element, #e5e7eb);
+    margin-right: 0;
+}
+#popRight,
+#popRight2,
+#popVendRight {
+    flex: 1 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 24px;
+}
+@media (max-width: 960px) {
+    .popBox { flex-direction: column; }
+    #popLeft2,
+    #popLeft,
+    #popVendLeft,
+    .popCustLeft {
+        border-right: none;
+        border-bottom: 1px solid var(--clr-border-element, #e5e7eb);
+        padding-right: 0;
+        padding-bottom: 16px;
+        margin-bottom: 12px;
+    }
+
+    #popRight,
+    #popVendRight {
+        padding-left: 0;
+    }
+
+}
+#popEmplRight  { flex: 1 1 0; min-width: 0; box-sizing: border-box; padding-bottom: 6px; }
+#popEmplLeft2  { flex: 1; padding-bottom: 6px; }
+#popEmplRight2 { flex: 1; padding-bottom: 6px; }
+.popCustRight  { flex: 1; }
+#popRight2     { flex: 1; }
+
+/* ── Customer modal column overrides ── */
+#modalPopCust #popLeft,
+#modalPopCust .popCustLeft {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding-right: 16px !important;
+    border-right: 1px solid #e5e7eb !important;
+}
+
+#modalPopCust #popRight,
+#modalPopCust .popCustRight {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding-left: 16px !important;
+    border-left: none !important;
+}
+
+#modalPopCust .popTable          { width: 100% !important; display: table !important; }
+#modalPopCust .popTableCell3,
+#modalPopCust .popTableCell2     { width: auto; margin-left: 8px; }
+
+#modalPopCust .popTableCell.popRightAligned {
+    width: 100px !important;
+    min-width: 100px !important;
+    white-space: nowrap !important;
+    padding-right: 10px !important;
+}
+
+#modalPopCust .popDataCell input,
+#modalPopCust .popCustDataCell input,
+#modalPopCust .popDataCell select,
+#modalPopCust .popCustDataCell select {
+    box-sizing: border-box !important;
+}
+
+.popDivider2 { width: 100%; height: 0; display: inline-block; }
+#popCustTaxPriceTable { max-height: 500px; overflow-y: auto; width: 100%; padding-bottom: 24px;; }
+#popCustTaxPriceHeader .popbox { flex-direction: column; }
+#popCustTaxPriceTable { scrollbar-color: #262626 #d5f5e3; }
+/* .popCenterAligned { display: flex; justify-content: center; align-items: center; } */
+.popHistoryBox    { display: flex; justify-content: center; align-items: center; width: 100%; }
+
+#popCustEmail { min-width: 150px; width: 100%; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9.  POP DATA CELLS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Base ── */
+.popDataCell,
+.popCustDataCell,
+.popVendDataCell,
+.popEmplDataCell {
+    font-size: 12px;
+    height: 30px;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding-left: 8px;
+    background-color: var(--clr-sidebar-bg);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    vertical-align: middle;
+}
+
+/* ── Hover ── */
+.popDataCell:hover,
+.popCustDataCell:hover,
+.popVendDataCell:hover,
+.popEmplDataCell:hover { border-color: #9ca3af; }
+
+/* ── View-mode: border on the cell itself ── */
+.popDataCell:not(:has(input)):not(:has(select)),
+.popCustDataCell:not(:has(input)):not(:has(select)),
+.popVendDataCell:not(:has(input)):not(:has(select)),
+.popEmplDataCell:not(:has(input)):not(:has(select)) {
+    border: 1px solid #d1d5db;
+    min-width: 24px;
+}
+
+/* ── Edit-mode: no border on the cell — let the child own it ── */
+.popDataCell:has(input),
+.popDataCell:has(select),
+.popCustDataCell:has(input),
+.popCustDataCell:has(select),
+.popVendDataCell:has(input),
+.popVendDataCell:has(select),
+.popEmplDataCell:has(input),
+.popEmplDataCell:has(select) {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+/* ── Read-only / no-edit cells ── */
+.popNoEdit {
+    background-color: #f3f4f6 !important;
+    color: #9ca3af !important;
+    border-color: #89b0ff !important;
+    cursor: default;
+}
+
+.popNoEdit input,
+.popNoEdit select {
+    border-color: #e5e7eb !important;
+    pointer-events: none;
+}
+
+/* ── Suppress input hover inside pop cells ── */
+.popDataCell input:hover,
+.popCustDataCell input:hover,
+.popVendDataCell input:hover,
+.popEmplDataCell input:hover {
+    border-color: inherit !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* ── Inputs ── */
+.popDataCell input,
+.popCustDataCell input,
+.popVendDataCell input,
+.popEmplDataCell input {
+    width: 100%;
+    padding: 0 8px !important;
+    color: #111827;
+    background-color: var(--clr-sidebar-bg) !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px;
+    text-transform: uppercase;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+/* ── Selects ── */
+.popDataCell select,
+.popCustDataCell select,
+.popVendDataCell select,
+.popEmplDataCell select {
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    background-color: var(--clr-sidebar-bg) !important;
+    box-sizing: border-box;
+    height: 26px;
+    width: 100%;
+    padding: 0 4px !important;
+    color: var(--clr-menu-active);
+}
+
+/* ── Hover on inputs/selects ── */
+.popDataCell input:hover,
+.popCustDataCell input:hover,
+.popVendDataCell input:hover,
+.popEmplDataCell input:hover,
+.popDataCell select:hover,
+.popCustDataCell select:hover,
+.popVendDataCell select:hover,
+.popEmplDataCell select:hover {
+    border-color: #9ca3af !important;
+}
+
+/* ── Focus glow ── */
+.popDataCell input:focus,
+.popCustDataCell input:focus,
+.popVendDataCell input:focus,
+.popEmplDataCell input:focus,
+.popDataCell select:focus,
+.popCustDataCell select:focus,
+.popVendDataCell select:focus,
+.popEmplDataCell select:focus {
+    outline: none !important;
+    border-color: #007BFF !important;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.15) !important;
+}
+
+/* ── Notes / multiline textareas ── */
+#popNotes,
+#popVendNotes,
+#popCustNotes,
+#popCustDelivNotes {
+    font-size: 12px;
+    color: var(--clr-thead-bg);
+    background-color: var(--clr-sidebar-bg);
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    resize: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    line-height: 1.4;
+    vertical-align: top;
+}
+
+#popNotes:hover,
+#popCustNotes:hover,
+#popCustDelivNotes:hover { border-color: #9ca3af; }
+
+#popNotes:focus,
+#popCustNotes:focus,
+#popCustDelivNotes:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.15);
+}
+
+#modalPopCust #popCustNotes {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    resize: vertical !important;
+    min-height: 80px !important;
+}
+
+/* ── Right-aligned numeric inputs ── */
+.popTableCell input { color: #2563eb; text-align: right; }
+
+/* ── Specific width classes ── */
+.itemAddWide   { width: 350px; }
+.itemAddNarrow { width: 70px; }
+
+.itemAddDate {
+    font-family: tahoma;
+    font-size: 14px;
+    color: #2563eb;
+    width: 105px;
+}
+
+/* ── Named selects ── */
+#popTypeSelect,
+#popVendorSelect,
+#popUser1Select,
+#popUser2Select { color: #2563eb; height: 28px; }
+
+#popCustContainer select,
+#popCustTaxPriceTable select,
+#popCustShipping select { color: #2563eb; height: 28px; border-radius: 6px; border-color: var(--border-faint);}
+
+#popSizeSelect,
+#popClassSelect { width: 79px !important; color: #2563eb; height: 28px; }
+
+#popCustCustTypeSelect { width: 150px !important; color: #2563eb; height: 28px; }
+#popPoolSelect         { width: 135px; height: 28px; }
+
+#popBarcodeInp {
+    width: 150px;
+    text-align: left !important;
+    font-size: 1em;
+}
+.popPriceAmt       { width: 75px; }
+.popPriceQty       { width: 45px !important; }
+
+.popPricePair {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    margin-left: 12px;
+}
+
+.popPricePair .popAt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    color: #374151;
+    font-weight: 700;
+}
+
+.popPricePair .popPriceAmt {
+    max-width: 75px;
+    border: none !important;
+    background: transparent !important;
+    padding: 0;
+}
+
+#popOrderLotUnit      { margin-left: 8px; }
+.popCustDiscInput     { text-align: right; }
+
+/* ── Checkboxes ── */
+.itemAddCheck,
+.itemAdd3State {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px;
+    border: 1.5px solid #c7c7c7 !important;
+    border-radius: 3px !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    vertical-align: middle;
+    position: relative;
+    top: 3px;
+    margin: 0 4px 0 0;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.itemAddCheck:hover,
+.itemAdd3State:hover { border-color: #007BFF !important; }
+
+.itemAddCheck:checked,
+.itemAdd3State:checked {
+    border-color: #007BFF !important;
+    background-color: #e3edff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%230070bc' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 12px 12px !important;
+    accent-color: unset !important;
+}
+
+.emplItemAddCheckbox {
+    width: 18px;
+    height: 18px;
+    position: relative;
+
+}
+
+.itemCheckboxChar {
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+    line-height: 18px;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.popDataCheck,
+.popData3State { display: flex; align-items: center; gap: 4px; }
+
+/* ── Customer modal checkbox overrides ── */
+#modalPopCust .popDataCheck,
+#modalPopCust .popData3State,
+#modalPopCust .popCustDataCheck,
+#modalPopCust .popCustData3State {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 30px !important;
+    width: 45px;
+}
+
+#modalPopCust input[type="checkbox"] {
+    position: static !important;
+    opacity: 1 !important;
+    width: 18px !important;
+    height: 18px !important;
+    flex-shrink: 0 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    border: 1.5px solid #c7c7c7 !important;
+    border-radius: 3px !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    cursor: pointer !important;
+    padding-left:4px;
+    margin-right: 4px;
+    transition: border-color 0.15s ease, background-color 0.15s ease !important;
+}
+
+#modalPopCust input[type="checkbox"]:hover:not(:disabled) { border-color: #007BFF !important; }
+
+#modalPopCust input[type="checkbox"]:checked {
+    border-color: #007BFF !important;
+    background-color: #e3edff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%230070bc' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 12px 12px !important;
+}
+
+#modalPopCust .itemCheckboxChar {
+    font-size: 13px !important;
+    color: var(--clr-text) !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+}
+
+/* ── Phone inputs ── */
+#modalPopCust .iti        { width: 100% !important; padding-left: 0 !important; }
+#modalPopCust .iti input  { width: 100% !important; }
+
+.popCustPhoneInput, .popVendPhoneInput, .popEmplPhoneInput { 
+    width: 180px; 
+}
+
+.popCustPhoneInput::placeholder,
+.popVendPhoneInput::placeholder,
+.popEmplPhoneInput::placeholder { color: lightgray; }
+
+.iti__tel-input { height: 26px; }
+
+/* ── Birthday selects ── */
+#modalPopCust .popCustBirthday {
+    display: flex !important;
+    gap: 6px;
+}
+
+#modalPopCust .popCustBirthday select { flex: 1 !important; min-width: 0 !important; }
+
+/* ── State/Zip row ── */
+#modalPopCust #popCustStateZip .popTableCell { width: auto !important; }
+
+/* ── Barcode section ── */
+.popBogusCell { width: 5px !important; }
+
+#popBarcodeSelect {
+    width: 150px;
+    top: 4px;
+    color: rgb(0,0,0);
+    height: 28px;
+}
+
+#popBarcBttnDiv { display: none; width: 160px; }
+
+.popBarcBttn {
+    font-size: 20px;
+    cursor: pointer;
+    color: #1f6b93;
+    vertical-align: middle;
+}
+
+.popBarcBttn:hover { color: #2E8584; }
+
+#popBarcodeFormBarc { width: 200px; color: #2563eb; }
+#popBarcodeFormQty  { width: 80px;  color: #2563eb; text-align: right; }
+#popBarcodeFormPrice{ width: 80px;  color: #2563eb; text-align: right; }
+
+/* ── Order lot radio ── */
+input[name="popOrderLot"] { height: 24px; width: 24px; padding:0; padding-left: 4px;}
+/* #popOrderLot {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+}
+#popOrdLotCase, #popOrdLotCase{
+    padding-left: 4px;
+} */
+
+/* ── Delivery same-as-billing checkbox ── */
+#popCustDelivSameAsBill { height: 18px; width: 18px; position: relative; top: 2px; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+  10.  POP BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.popCancelBtn,
+.popDeleteBtn,
+.popEditBtn,
+.popSaveBtn {
+    width: 125px;
+    height: 36px;
+    padding: 0 16px;
+    margin: 0;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    border-radius: 6px;
+    float: none !important;
+    position: static !important;
+    cursor: pointer;
+}
+
+.popCancelBtn,
+.popDeleteBtn {
+    background: #fff;
+    color: var(--clr-text);
+    border: 1px solid #c7c7c7;
+}
+
+.popEditBtn,
+.popSaveBtn {
+    background: var(--clr-menu-active-bg);
+    color: var(--clr-menu-active);
+    border: 1px solid var(--clr-menu-active);
+}
+
+.popCancelBtn:disabled { background-color: gray; }
+
+.popButtonDiv {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    margin: 0 auto;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 1000px;
+    justify-content: flex-end;
+}
+
+.popEditButtonDiv {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    margin-top: 24px;
+    justify-content: flex-end;
+    max-width: 1000px;
+}
+
+.goButton {
+    border: var(--border-faint);
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    max-width: 250px;
+}
+
+.goButton:hover:enabled { background-color: #2563eb; color: #e3edff; }
+.goButton:disabled      { background-color: gray; color: lightgray; }
+
+#popRemoteInvBtn { font-size: 14px; margin-right: auto; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+  11.  EMPLOYEE GRID ROWS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.popGridRow    { display: grid; margin: 1px 0; }
+.popGridSingle { grid-template-columns: 100px 300px; }
+.popGridDate   { grid-template-columns: 100px 150px; }
+
+#popEmplUserIDInp { text-transform: uppercase; width: 75px !important; }
+#popEmplPswdHint  { color: red; font-size: 12px; text-align: center; }
+.popEmplFocusedInput { outline-color: crimson; }
+
+#popEmplFirstMiddle { grid-template-columns: 100px 200px 65px 35px; }
+#popEmplStateZip    { grid-template-columns: 100px 120px 65px 115px; }
+
+.popGridCell {
+    padding: 4px 6px;
+    font-size: 14px;
+    text-align: left;
+    height: 28px;
+    vertical-align: middle;
+}
+
+#popEmplFirstNameInp { width: 190px !important; }
+#popEmplMiddleInp    { width: 30px; text-align: center; }
+
+.popEmplDataSelect select { width: 75px; color: rgb(31,107,147); height: 24px; }
+
+#modalPopEmplBody input { color: rgb(31,107,147); }
+
+.popGridCheckbox { border: none !important; }
+
+.popGridSecurity   { grid-template-columns: 115px 300px; align-items: center; }
+#popEmplLevelDiv   { grid-template-columns: 115px 100px; }
+
+/* ── Employee Security fieldset grid (Access / Count-App) ── */
+#popEmplAccessFieldset,
+#popEmplCountAppFieldset {
+    display: grid;
+    grid-template-columns: 140px auto;
+    align-items: center;
+    row-gap: 4px;
+    column-gap: 8px;
+    padding: 8px 12px 10px !important;
+    margin-bottom: 12px;
+}
+
+#popEmplAccessFieldset h4,
+#popEmplCountAppFieldset h4 {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--clr-text-muted, #888);
+    padding: 0 0 6px 0 !important;
+    margin: 0 0 2px 0 !important;
+    border-bottom: 1px solid var(--clr-border, #edf0f4);
+}
+
+#popEmplAccessFieldset .popGridCell.popGridLabel,
+#popEmplCountAppFieldset .popGridCell.popGridLabel {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--clr-thead-bg);
+    padding: 0 8px 0 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+#popEmplAccessFieldset .popEmplDataCell.popGridCheckbox,
+#popEmplCountAppFieldset .popEmplDataCell.popGridCheckbox {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    height: 28px !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+#popEmplAccessFieldset .popEmplDataCell.popGridCheckbox input[type="checkbox"],
+#popEmplCountAppFieldset .popEmplDataCell.popGridCheckbox input[type="checkbox"] {
+    flex-shrink: 0;
+}
+
+#popEmplAccessFieldset .popEmplDataCell.popGridCheckbox label,
+#popEmplCountAppFieldset .popEmplDataCell.popGridCheckbox label {
+    font-size: 13px;
+    color: var(--clr-text, #374151);
+    line-height: 1;
+    cursor: pointer;
+}
+
+#popEmplLevel,
+#popEmplLevelInp { width: 50px; text-align: right; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+  12.  VEX F7 INPUTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vexF7Input {
+    text-transform: uppercase;
+    margin-left: 10px !important;
+    color: #2563eb !important;
+}
+
+.vexF7Input:disabled,
+.vexF7Input:disabled label { color: darkgray !important; }
+.vexF7Input:disabled       { background-color: #e0e0e0 !important; }
+
+.f7Label {
+    display: inline-block;
+    min-width: 75px;
+    font-size: 18px;
+}
+
+.f7Hint {
+    display: inline-block;
+    font-size: 14px;
+    font-style: italic;
+    color: darkred;
+    margin-left: 10px;
+}
+
+#popUser1Label:disabled,
+#popUser2Label:disabled { color: gray; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+  13.  TIME CLOCK
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#timeClockContainer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 650px;
+    border: 2px solid #2E8584;
+}
+
+#timeClockTableHdr tr th  { font-size: 14px; height: 26px; }
+#timeClockTableBody tr td { text-align: center; }
+#timeClockButtonContainer { align-items: center; max-width: 200px; }
+.timeClockButton          { width: 90px; }
+
+#timeClockHint {
+    color: #2E8584;
+    border: 1px solid #2E8584;
+    padding: 6px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+  16.  COLVIS PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.colvis-dropdown {
+    min-width: 540px;
+    max-width: 680px;
+}
+
+.colvis-dropdown__items {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(150px, 1fr));
+    column-gap: 6px;
+    row-gap: 2px;
+    padding: 4px 8px 8px;
+}
+
+.colvis-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.doh-colvis-grid {
+    display: grid;
+    align-items: start;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 16px;
+}
+
+.doh-colvis-col { min-width: 140px; }
+
+.doh-colvis-group-label {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    padding: 2px 0 6px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+}
+
+.dt-colvis-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 2px;
+    cursor: pointer;
+    font-size: 13px;
+    white-space: nowrap;
+    user-select: none;
+    border-radius: 4px;
+}
+
+.dt-colvis-item:hover { background: #f0f4ff; }
+
+/* ── Global checkbox reset (used in ColVis panels) ── */
+
+input[type="checkbox"]:checked {
+    border-color: #007BFF !important;
+    background-color: #e3edff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%230070bc' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-size: 12px 12px !important;
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+input[type="checkbox"]:checked:disabled {
+    background-color: #c7c7c7 !important;
+    border-color: #c7c7c7 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+  17.  RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 960px) {
+    .popBox { flex-direction: column; }
+
+    #popLeft,
+    #popVendLeft,
+    #popEmplLeft,
+    .popCustLeft,
+    #popLeft2,
+    #popRight,
+    #popVendRight,
+    #popEmplRight { flex: 1 1 100%; width: 100%; }
+
+    #popEmplLeft {
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.15);
+        padding-bottom: 12px;
+        margin-bottom: 8px;
+    }
+
+    #popLeft2 .popTableCell,
+    #popLeft2 .popSubTitle,
+    #popLeft2 .popDataCell,
+    #popLeft2 .popDataCell input {
+        font-size: clamp(11px, calc(0.54vw + 8.84px), 14px);
+    }
+      #modalPopEmplBody {
+        width: 98% !important;
+        max-width: 560px !important;
+    }
+
+    #popEmplContainer .popBox,
+    #popEmplSecurity .popBox {
+        flex-direction: column !important;
+    }
+
+    #popEmplLeft,
+    #popEmplRight,
+    #popEmplLeft2,
+    #popEmplRight2 {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* ── Drop the divider border when stacked ── */
+    #popEmplLeft {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0,0,0,0.12) !important;
+        padding-bottom: 12px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* ── Fieldsets full width when stacked ── */
+    #popEmplAccessFieldset,
+    #popEmplCountAppFieldset {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .jsgrid-header-cell,
+    .jsgrid-cell { font-size: 12px; padding: 10px 6px; }
+}
+
+@media (max-width: 800px) {
+    #modalPopCust .popBox { flex-direction: column !important; }
+
+    #modalPopCust #popLeft,
+    #modalPopCust .popCustLeft {
+        border-right: none !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        padding-right: 0 !important;
+        padding-bottom: 16px !important;
+        margin-bottom: 12px !important;
+    }
+
+    #modalPopCust #popRight,
+    #modalPopCust .popCustRight { padding-left: 0 !important; border-left: none !important; }
+
+    #modalPopCust .popTableCell.popRightAligned { width: 100px !important; min-width: 100px !important; }
+}
+
+@media (max-width: 640px) {
+    #jsCustListTableDiv,
+    #jsItemListTableDiv,
+    #jsEmplListTableDiv,
+    #jsVendListTableDiv { height: calc(100% - 110px); }
+}
+
+@media (max-width: 500px) {
+    #modalPopCust .popTable  { display: block !important; }
+
+    #modalPopCust .popTableRow {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    #modalPopCust .popTableCell.popRightAligned {
+        width: 90px !important;
+        min-width: 90px !important;
+        flex-shrink: 0 !important;
+    }
+
+    #modalPopCust .popTableCell3,
+    #modalPopCust .popTableCell2,
+    #modalPopCust .popDataCell { flex: 1 !important; min-width: 0 !important; }
+}
+
+@media (max-width: 480px) {
+    #popLeft2 .popTable {
+        display: block;
+        width: 100%;
+    }
+
+    #popLeft2 .popTableRow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        margin-bottom: 4px;
+    }
+
+    #popLeft2 .popTableCell.popRightAligned {
+        width: auto !important;
+        min-width: 90px;
+        flex-shrink: 0;
+        text-align: right !important;
+    }
+
+    #popLeft2 .popTableCell.popPopHide,
+    #popLeft2 .popDataCell.popPopHide { display: none; }
+
+    #popLeft2 .popDataCell { flex: 1; min-width: 0; width: auto !important; }
+}
+
+
+#smallListTableHdr .smallListTableHdrBottomRow:first-child{
+    text-align: right; /* number table row */
+}
+
+.smallListDialog {
+    width: 500px !important;
+}
+#popMinPriceInp{
+    width: 135px;
+}
+
+.popTableRow.popPopHide {
+    display: table-row;     
+    height: auto;       
+    text-align: right;
+    visibility: visible;
+}
+
+#popPriceAmt .popEditButtonDiv{  
+    box-shadow: none;  
+    border:#007BFF;
+}
+
+#emplListTable_wrapper button.dt-button.dt-export-dropdown {
+    background-color: var(--clr-sidebar-bg);
+}
+
+#empListTableWrapper, #vendListTable_wrapper, #itemListTable_wrapper, #custListTable_wrapper, #emplListTable_wrapper{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#emplListTable{ overflow-y: scroll; }
+
+
+#Modal_emplList_Body .except-modal-body,
+#Modal_vendList_Content, #Modal_Promo_Content 
+.fqmodal-body, #modalPopItemBody.fqmodal-body, #modalPopEmplBody .except-modal-body{
+    max-width: 1200px;
+}
+
+.btn-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.fq_select_cancel, .fq_select_submit{
+    width: 100px;
+    padding: 6px 10px;
+}
+.ui-dialog[aria-describedby="smallListDialog"] .ui-dialog-titlebar-close {
+    display: none !important;
+}
+.ui-dialog .ui-dialog-titlebar-close .ui-icon {
+    display: none;
+}
+
+/* Promo date table — tighten the happy hour / apply-all rows */
+#promoDateTable tr:nth-child(3) td:first-child,
+#promoDateTable tr:nth-child(4) td:first-child {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    vertical-align: middle;
+}
+
+#promoDateTable tr:nth-child(3) td:first-child input[type="checkbox"],
+#promoDateTable tr:nth-child(4) td:first-child input[type="checkbox"] {
+    position: static !important;
+    top: 0 !important;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+#promoDateTable tr:nth-child(3) td:first-child span,
+#promoDateTable tr:nth-child(4) td:first-child span {
+    position: static !important;
+    top: 0 !important;
+    vertical-align: middle;
+}
+
+/* Hourly custom date dialog — title bar border */
+#hourlyModalDateDialog ~ .ui-dialog .ui-dialog-titlebar,
+.ui-dialog:has(#hourlyModalDateDialog) .ui-dialog-titlebar {
+    border-bottom: var(--border-faint) !important;
+}
+
+#LIFOSelect{
+    width:50%;
+    border: var(--border-faint);
+}
+
+#LIFOSelect,
+#Modal_itemList_Body .except-modal-body{
+    max-width: 1000px;
+}
+
+#LIFOSelect{
+    padding: 12px;
+    border-radius: 6px;
+    margin: 0 auto;
+}
+
+.jsgrid-nodata-row .jsgrid-cell {
+    text-align: center;
+    padding: 24px 12px;
+    color: var(--clr-text-muted, #6b7280);
+    font-size: 14px;
+    font-family: var(--font-base);
+}
+
+#dailySummTable thead th.daily-dept-column {
+    background-color: #e8f2ff;
+    color: #174a7c;
+    border-left: 1px solid #b8d3ed;
+    border-right: 1px solid #b8d3ed;
+}
+
+#dailySummTable tbody td.daily-dept-column {
+    background-color: #f4f8fd;
+}
+
+#dailySummTable tbody td.daily-dept-percent {
+    background-color: #edf4fb;
+    color: #526579;
+}
+
+#dailySummTable thead th.daily-dept-header,
+#dailySummTable tbody td.daily-dept-value {
+    border-left: 2px solid #8ab5dc;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DEAD / LEGACY — retained for reference only, not active in the cascade.
+   Do not remove selectors from within this block without confirming the
+   live rule (in its numbered section above) still covers the same case.
+   ═══════════════════════════════════════════════════════════════════════════
+
+.highlighted, .jsgrid-selected-row > .jsgrid-cell {
+    background: rgb(213, 245, 227) !important;
+    background-color: rgb(213, 245, 227) !important;
+}
+
+.jsgrid-pager { height: 32px !important; }
+.listSearchImage { float: right; }
+.listSearchImage:hover { color: yellow; }
+.listSearchImage:hover svg { fill: yellow; }
+
+.listSearchText { position: relative; top: -7px; }
+.pagerImage { position: relative; top: 10px; }
+
+.external-pager .jsgrid-pager-page, .external-pager .jsgrid-pager-nav-button {
+    color: rgb(213, 245, 227);
+    border: 1px solid #0d4747;
+    border-radius: 5px;
+    margin: 0px 5px;
+    padding: 6px 16px 10px 15px;
+    cursor: pointer;
+    background: -webkit-gradient(linear, left top, left bottom, from(#1dcccc), to(#086b6b));
+    background: -moz-linear-gradient(top, #1dcccc, #086b6b);
+    background: linear-gradient(to bottom, #1dcccc, #086b6b);
+}
+
+span.jsgrid-pager-nav-inactive-button {
+    background: darkgray !important;
+    cursor: default !important;
+    padding: 0px 15px !important;
+    position: relative;
+    top: 10px;
+}
+.jsgrid-pager:has(> span.jsgrid-pager-nav-inactive-button) {
+    position: relative;
+    top: -1px;
+}
+
+.jsgrid-pager span.jsgrid-pager-nav-inactive-button a {
+    color: lightgray !important;
+    position: relative;
+    top: 2px !important;
+}
+.jsgrid-pager span.jsgrid-pager-nav-inactive-button a svg path {
+    fill: lightgray !important;
+}
+
+.external-pager .jsgrid-pager-page a,
+.external-pager .jsgrid-pager-nav-button a {
+    text-decoration: none;
+    position: relative;
+    top: 11px;
+}
+.external-pager .jsgrid-pager-page:hover a svg path,
+.external-pager .jsgrid-pager-nav-button:hover a svg path{
+    fill: rgb(255, 255, 255);
+}
+
+.listAddButton:before {
+    content:  "\0000a0";
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    margin: 0 4px -6px -4px;
+    position: relative;
+    top: 3px;
+    left: 5px;
+    background: url('data:image/svg+xml,<%3Fxml version="1.0" encoding="UTF-8"%3F><svg width="100pt" height="100pt" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="m16.738 16.738c18.371-18.371 48.152-18.371 66.523 0 18.371 18.371 18.371 48.152 0 66.523-18.371 18.371-48.152 18.371-66.523 0-18.371-18.371-18.371-48.152 0-66.523zm29.422 15.262v14.16h-14.16c-5.0547 0-5.0547 7.6797 0 7.6797h14.16v14.16c0 5.0547 7.6797 5.0547 7.6797 0v-14.16h14.16c5.0547 0 5.0547-7.6797 0-7.6797h-14.16v-14.16c0-5.0547-7.6797-5.0547-7.6797 0zm-23.992-9.832c-15.371 15.371-15.371 40.293 0 55.664 15.371 15.371 40.293 15.371 55.664 0 15.371-15.371 15.371-40.293 0-55.664-15.371-15.371-40.293-15.371-55.664 0z" fill="%23fff" fill-rule="evenodd"/></svg>') no-repeat left center transparent;
+    background-size: 100% 100%;
+}
+
+.listImport {
+    position: absolute;
+    left: calc(50% - 30px);
+}
+
+.searchButton:before{
+    content:  "\0000a0";
+    display: inline-block;
+    line-height: 24px;
+    position: relative;
+    top: 0px;
+    left: -2px;
+}
+
+.listContextMenu-option:hover { background: #fcfae8; }
+
+.listContextMenu-option {
+    z-index: 99999;
+    cursor: pointer;
+}
+
+   ═══════════════════════════════════════════════════════════════════════════ */

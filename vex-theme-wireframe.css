@@ -1,0 +1,424 @@
+@-webkit-keyframes vex-pulse {
+  0%   { box-shadow: inset 0 0 0 300px transparent; }
+  70%  { box-shadow: inset 0 0 0 300px rgba(255, 255, 255, 0.25); }
+  100% { box-shadow: inset 0 0 0 300px transparent; }
+}
+@keyframes vex-pulse {
+  0%   { box-shadow: inset 0 0 0 300px transparent; }
+  70%  { box-shadow: inset 0 0 0 300px rgba(255, 255, 255, 0.25); }
+  100% { box-shadow: inset 0 0 0 300px transparent; }
+}
+
+.vex.vex-theme-wireframe,
+.vex.vex-theme-noteVex,
+.vex.vex-theme-multiButtons {
+    display: flex;
+    align-items: center;    
+    justify-content: center; 
+    background: rgba(15,23,42,.50) !important;
+    backdrop-filter: blur(3px) !important;
+    -webkit-backdrop-filter: blur(3px) !important;
+}
+
+.vex.vex-theme-wireframe .vex-overlay,
+.vex.vex-theme-noteVex .vex-overlay,
+.vex.vex-theme-multiButtons .vex-overlay {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Shared content box ── */
+.vex.vex-theme-wireframe .vex-content,
+.vex.vex-theme-noteVex .vex-content,
+.vex.vex-theme-multiButtons .vex-content {
+  font-family: Inter, sans-serif;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #C7C7C7;
+  border-radius: 8px;
+  padding: 1em;
+  position: relative;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 400px;
+  font-size: 14px;
+  line-height: 1.5em;
+}
+
+.vex.vex-theme-multiButtons .vex-content{
+  padding: 1.5em;
+}
+
+.vex.vex-theme-multiButtons .vex-content {
+  width: 600px;
+}
+
+.vex.vex-theme-wireframe .vex-content h1,
+.vex.vex-theme-wireframe .vex-content h2,
+.vex.vex-theme-wireframe .vex-content h3,
+.vex.vex-theme-wireframe .vex-content h4,
+.vex.vex-theme-wireframe .vex-content h5,
+.vex.vex-theme-wireframe .vex-content h6,
+.vex.vex-theme-wireframe .vex-content p,
+.vex.vex-theme-wireframe .vex-content ul,
+.vex.vex-theme-wireframe .vex-content li,
+.vex.vex-theme-noteVex .vex-content h1,
+.vex.vex-theme-noteVex .vex-content h2,
+.vex.vex-theme-noteVex .vex-content h3,
+.vex.vex-theme-noteVex .vex-content h4,
+.vex.vex-theme-noteVex .vex-content h5,
+.vex.vex-theme-noteVex .vex-content h6,
+.vex.vex-theme-noteVex .vex-content p,
+.vex.vex-theme-noteVex .vex-content ul,
+.vex.vex-theme-noteVex .vex-content li,
+.vex.vex-theme-multiButtons .vex-content h1,
+.vex.vex-theme-multiButtons .vex-content h2,
+.vex.vex-theme-multiButtons .vex-content h3,
+.vex.vex-theme-multiButtons .vex-content h4,
+.vex.vex-theme-multiButtons .vex-content h5,
+.vex.vex-theme-multiButtons .vex-content h6,
+.vex.vex-theme-multiButtons .vex-content p,
+.vex.vex-theme-multiButtons .vex-content ul,
+.vex.vex-theme-multiButtons .vex-content li {
+  color: inherit;
+}
+
+/* ── Shared close button ── */
+.vex.vex-theme-wireframe .vex-close,
+.vex.vex-theme-noteVex .vex-close,
+.vex.vex-theme-multiButtons .vex-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.vex.vex-theme-wireframe .vex-close:before,
+.vex.vex-theme-noteVex .vex-close:before,
+.vex.vex-theme-multiButtons .vex-close:before {
+  position: absolute;
+  content: "\00D7";
+  font-size: 28px;
+  font-weight: normal;
+  line-height: 60px;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+  top: 3px;
+  right: 3px;
+  color: #374151;
+}
+
+.vex.vex-theme-wireframe .vex-close:hover:before,
+.vex.vex-theme-wireframe .vex-close:active:before,
+.vex.vex-theme-noteVex .vex-close:hover:before,
+.vex.vex-theme-noteVex .vex-close:active:before,
+.vex.vex-theme-multiButtons .vex-close:hover:before,
+.vex.vex-theme-multiButtons .vex-close:active:before {
+  color: #dc2626;
+}
+
+/* ── Shared form spacing ── */
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-message,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-message,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-message {
+  margin-bottom: .5em;
+  color: #374151;
+  font-size: 14px;
+}
+
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input {
+  margin-bottom: 1em;
+}
+
+/* ── Shared inputs / selects / textareas ── */
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input select,
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input textarea,
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="date"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="datetime-local"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="email"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="number"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="password"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="search"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="tel"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="text"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="time"],
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input[type="url"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input select,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input textarea,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="date"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="datetime-local"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="email"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="number"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="password"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="search"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="tel"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="text"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="time"],
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input[type="url"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input select,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input textarea,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="date"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="datetime-local"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="email"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="number"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="password"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="search"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="tel"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="text"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="time"],
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input[type="url"] {
+  background: #ffffff;
+  color: #374151;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  width: 100%;
+  padding: 0 8px;
+  min-height: 28px;
+  margin: 0 0 .25em;
+  border: 1px solid #C7C7C7;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input select{
+  padding: 0;
+}
+
+/* focus */
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input select:focus,
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input textarea:focus,
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-input input:focus,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input select:focus,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input textarea:focus,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-input input:focus,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input select:focus,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input textarea:focus,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-input input:focus {
+  outline: none;
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.25);
+}
+
+/* ── Shared button row clearfix ── */
+.vex.vex-theme-wireframe .vex-dialog-form .vex-dialog-buttons:after,
+.vex.vex-theme-noteVex .vex-dialog-form .vex-dialog-buttons:after,
+.vex.vex-theme-multiButtons .vex-dialog-form .vex-dialog-buttons:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ── Shared button base ── */
+.vex.vex-theme-wireframe .vex-dialog-button,
+.vex.vex-theme-noteVex .vex-dialog-button,
+.vex.vex-theme-multiButtons .vex-dialog-button {
+  float: right;
+  margin: 0 0 0 .5em;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  line-height: 1em;
+  padding: .6em 1.6em;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.vex.vex-theme-wireframe .vex-dialog-button.vex-last,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-last,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-last {
+  margin-left: 0;
+}
+
+/* focus pulse */
+.vex.vex-theme-wireframe .vex-dialog-button:focus,
+.vex.vex-theme-noteVex .vex-dialog-button:focus,
+.vex.vex-theme-multiButtons .vex-dialog-button:focus {
+  -webkit-animation: vex-pulse 1.1s infinite;
+  animation: vex-pulse 1.1s infinite;
+  outline: none;
+}
+@media (max-width: 568px) {
+  .vex.vex-theme-wireframe .vex-dialog-button:focus,
+  .vex.vex-theme-noteVex .vex-dialog-button:focus,
+  .vex.vex-theme-multiButtons .vex-dialog-button:focus {
+    -webkit-animation: none;
+    animation: none;
+  }
+}
+
+/* Primary — teal (confirm / save) */
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-primary,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-primary,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-primary {
+
+  border: 1px solid #2563eb;
+  color: #2563eb;
+}
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-primary:hover,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-primary:hover,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-primary:hover {
+  background: #e3edff;
+}
+
+/* Secondary — light blue (cancel) */
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-secondary,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-secondary,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-secondary {
+  background-color: #e3edff;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+}
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-secondary:hover,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-secondary:hover,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-secondary:hover {
+  background-color: #ffafaf;
+  color: #791717;
+  border-color: #eb2525;
+}
+
+/* Caution — amber */
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-caution,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-caution,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-caution {
+  background: #f1c25b;
+  color: #374151;
+  border: 1px solid #d4a017;
+}
+.vex.vex-theme-wireframe .vex-dialog-button.vex-dialog-button-caution:hover,
+.vex.vex-theme-noteVex .vex-dialog-button.vex-dialog-button-caution:hover,
+.vex.vex-theme-multiButtons .vex-dialog-button.vex-dialog-button-caution:hover {
+  background: #f5d27a;
+}
+
+/* ── Loading spinner ── */
+.vex-loading-spinner.vex-theme-wireframe,
+.vex-loading-spinner.vex-theme-noteVex,
+.vex-loading-spinner.vex-theme-multiButtons {
+  height: 2.5em;
+  width: 2.5em;
+}
+
+.vex.vex-theme-wireframe .vex-overlay,
+.vex.vex-theme-noteVex .vex-overlay,
+.vex.vex-theme-multiButtons .vex-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+ 
+/* ═══════════════════════════════════════════════════════════════════════════
+   DEPARTMENTS TABLE — align with Discounts Report table style
+   Add this to dash.css alongside the other #DOHtablediv / report table rules
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Container — matches #Disctablediv / #DOHtablediv pattern ── */
+#deptTableDiv {
+  width: 90%;
+  min-height: 250px;
+  max-height: calc(100vh - 280px);
+  height: auto;
+  overflow-y: auto;
+  overflow-x: auto;
+  display: inline-block;
+  text-align: left;
+  border-radius: 8px;
+  padding: 1em;
+  background-color: #ffffff;
+  position: relative;
+}
+
+/* ── Title paragraph — matches .TableDivTitles ── */
+#deptDivTitle {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--clr-thead-legacy);
+  margin: 0;
+  padding-bottom: 12px;
+  display: none;   
+}
+
+/* ── Wait / empty state — matches .waitPara ── */
+#dept_waitp {
+  color: var(--clr-border-strong);
+  font-size: 20px;
+  line-height: 451px;
+  height: 451px;
+  text-align: center;
+}
+
+#dept_hdr,
+#deptTable thead {
+  background-color: #433B3B;
+}
+
+#dept_hdr th,
+#deptTable thead th {
+  color: var(--clr-thead-text);
+  font-size: 12px;
+  white-space: nowrap;
+  padding: 6px 8px;
+}
+
+/* ── Top-left / top-right radius on first and last header cell ── */
+#deptTable thead tr:first-child th:first-child { border-top-left-radius:  8px; }
+#deptTable thead tr:first-child th:last-child  { border-top-right-radius: 8px; }
+
+/* ── Body rows — matches dash.css global td rules ── */
+#deptTable tbody tr td {
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--clr-titlebar-text);
+  padding: 4px 8px;
+}
+
+/* ── Alternating rows — matches alt-table-row token ── */
+#deptTable tbody tr:nth-child(odd)  { background-color: var(--clr-sidebar-bg); }
+#deptTable tbody tr:nth-child(even) { background-color: var(--alt-table-row); }
+
+/* ── Row hover ── */
+#deptTable tbody tr:hover td {
+  background-color: var(--clr-row-hover);
+  cursor: pointer;
+}
+
+/* ── DataTables box-shadow — matches table.dataTable.no-footer ── */
+#deptTable.dataTable.no-footer {
+  border-bottom: none !important;
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 14px 0 rgba(0,0,0,0.19) !important;
+}
+
+/* ── Toolbar / bottom row layout — matches disc-bottom pattern ── */
+.dept-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.dept-info {
+  padding: 4px 0;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ── Wrapper — overflow visible so export dropdowns aren't clipped ── */
+#deptTablewrapper {
+  position: relative;
+  overflow: visible;
+}
+
+#dept_hdr,
+#deptTable thead {
+  background-color: #433B3B;
+}
